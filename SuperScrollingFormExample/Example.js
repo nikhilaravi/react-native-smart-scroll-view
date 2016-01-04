@@ -1,85 +1,87 @@
-import React, { Component, View, TextInput, StyleSheet } from 'react-native';
+import React, {
+  Component,
+  View,
+  TextInput,
+  StyleSheet,
+  ScrollView
+} from 'react-native';
 
-class SuperScroll extends Component {
-
-  constructor(){
-    super();
-    this.refCreator   = this.refCreator.bind(this);
-    this.inputOnFocus = this.inputOnFocus.bind(this);
-  }
-
-  refCreator (ref) {
-    return component => this[ref] = component
-  }
-
-  inputOnFocus (ref,type) {
-    return () => console.log(ref,type); //add function to handle keyboard events
-  }
-
-  render () {
-
-    const content = this.props.children.map((element, i) => {
-
-      if (element.props.superscroll === 'text') {
-        const ref = 'input_' + i
-
-        return React.cloneElement(element,
-          {
-            onFocus : this.inputOnFocus(ref, 'text'),
-            ref     : this.refCreator(ref)
-          })
-      } else {
-        return element;
-      }
-    })
-
-    return (
-      <View style={{backgroundColor: 'yellow', flex:1}}>
-        {content}
-      </View>
-    );
-  }
-}
+import SuperScroll from './SuperScroll.js';
 
 class Example extends Component {
   render () {
     return (
-      <SuperScroll>
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-        <TextInput
-          superscroll='text'
-          style={styles.textInput}
-        />
-      </SuperScroll>
+      <View style={styles.container}>
+        <View style={styles.header}/>
+        <SuperScroll
+          contentContainerStyle = { styles.contentContainerStyle }
+        >
+          <TextInput
+            superscroll = 'text'
+            style       = {styles.textInput}
+            moveToNext  = {true}
+            autoCorrect = {false}
+          />
+          <TextInput
+            superscroll = 'text'
+            style       = {styles.textInput}
+            moveToNext  = {true}
+            autoCorrect = {false}
+          />
+          <TextInput
+            superscroll = 'text'
+            style       = {styles.textInput}
+            moveToNext  = {true}
+            autoCorrect = {false}
+          />
+          <TextInput
+            superscroll = 'text'
+            style       = {styles.textInput}
+            moveToNext  = {true}
+            autoCorrect = {false}
+          />
+          <TextInput
+            superscroll = 'text'
+            style       = {styles.textInput}
+            moveToNext  = {true}
+          />
+          <TextInput
+            superscroll='text'
+            style     =     {styles.textInput}
+            autoCorrect = {false}
+          />
+        </SuperScroll>
+        <View style={styles.footer}/>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    height:30,
-    width: 200,
-    borderWidth: 1
-  }
+  container: {
+    flex:1,
+  },
+    contentContainerStyle: {
+      height: 700,
+      width: 300,
+      alignItems: 'center',
+      backgroundColor:'pink',
+      justifyContent: 'space-around'
+    },
+      textInput: {
+        height:      30,
+        width:       200,
+        borderWidth: 1,
+      },
+    footer: {
+      height: 70,
+      backgroundColor: 'yellow'
+    },
+    header: {
+      height: 70,
+      backgroundColor: 'green'
+    },
+
 })
 
 export default Example;
