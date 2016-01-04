@@ -171,7 +171,7 @@ export default class SuperScroll extends Component {
             ref                              = { component => this._superScroll=component}
             automaticallyAdjustContentInsets = {false}
             scrollsToTop                     = {false}
-            scrollEnabled                    = {this.state.keyBoardUp ? false : true}
+            scrollEnabled                    = {this.state.keyBoardUp ? true : false}
             style                            = {{ flex: 1}}
             onScroll                         = {this._updateScrollPosition}
             scrollEventThrottle              = {16}
