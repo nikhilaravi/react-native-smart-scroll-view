@@ -9,12 +9,29 @@ import React, {
 import SuperScroll from './SuperScroll.js';
 
 class Example extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      focusFieldIndex: 1
+    }
+  }
+
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({
+        focusFieldIndex: 5
+      })
+    }, 1000)
+  }
+
   render () {
     return (
       <View style={styles.container}>
         <View style={styles.header}/>
         <SuperScroll
           contentContainerStyle = { styles.contentContainerStyle }
+          forceFocusFieldIndex  = { this.state.focusFieldIndex }
         >
           <TextInput
             superScrollOptions = {{
@@ -103,7 +120,6 @@ const styles = StyleSheet.create({
       height: 70,
       backgroundColor: 'green'
     },
-
 })
 
 export default Example;
