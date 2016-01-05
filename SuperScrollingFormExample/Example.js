@@ -17,38 +17,60 @@ class Example extends Component {
           contentContainerStyle = { styles.contentContainerStyle }
         >
           <TextInput
-            superscroll = 'text'
-            style       = {styles.textInput}
-            moveToNext  = {true}
-            autoCorrect = {false}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
           <TextInput
-            superscroll = 'text'
-            style       = {styles.textInput}
-            moveToNext  = {true}
-            autoCorrect = {false}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
           <TextInput
-            superscroll = 'text'
-            style       = {styles.textInput}
-            moveToNext  = {true}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
           <TextInput
-            superscroll = 'text'
-            style       = {styles.textInput}
-            moveToNext  = {true}
-            autoCorrect = {false}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
           <TextInput
-            superscroll = 'text'
-            style       = {styles.textInput}
-            moveToNext  = {true}
-            autoCorrect = {true}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
           <TextInput
-            superscroll='text'
-            style     =     {styles.textInput}
-            autoCorrect = {false}
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
+          />
+          <TextInput
+            superScrollOptions = {{
+              moveToNext: true,
+              type:       'text'
+            }}
+            style              = {styles.textInput}
+            autoCorrect        = {false}
           />
         </SuperScroll>
         <View style={styles.footer}/>

@@ -74,7 +74,6 @@ export default class SuperScroll extends Component {
   }
 
   _keyboardWillShow(e) {
-    console.log(e);
     const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
 
     this.setState({
@@ -128,29 +127,42 @@ export default class SuperScroll extends Component {
   }
 
   render () {
+    let inputIndex   = 0;
+    const superClone = (element, i) => {
+      const { superScrollOptions } = element.props;
+      let superProps               = { key: i };
 
-    let inputIndex = 0;
+      if (superScrollOptions.type === 'text') {
+        const ref          = 'input_' + inputIndex;
 
-    const content = this.props.children.map((element, i) => {
-      let superProps = { key: i };
+        superProps.onFocus = () => this._focusNode(ref,'text');
+        superProps.ref     = this._refCreator(ref);
 
-      if (element.props.superscroll === 'text') {
-        const ref          = 'input_' + inputIndex
-        superProps.onFocus = () => this._focusNode(ref,'text'),
-        superProps.ref     = this._refCreator(ref)
-
-        if (element.props.moveToNext === true) {
-          const nextRef              = 'input_' + (inputIndex+1)
-          superProps.blurOnSubmit    = false
-          superProps.onSubmitEditing = () => this._focusField(nextRef)
-          superProps.returnKeyType   = 'next'
+        if (superScrollOptions.moveToNext === true) {
+          const nextRef              = 'input_' + (inputIndex+1);
+          superProps.blurOnSubmit    = false;
+          superProps.onSubmitEditing = () => this._focusField(nextRef);
         }
-
         inputIndex += 1
       }
 
       return React.cloneElement(element, superProps)
-    })
+    }
+
+    function recursivelyCheckAndAdd(children, i) {
+      return React.Children.map(children, (child, j) => {
+
+        if (child.props.superScrollOptions !== undefined) {
+          return superClone(child, ''+i+j);
+        } else if (child.props.children !== undefined) {
+          return React.cloneElement(child, {key: i}, recursivelyCheckAndAdd(child.props.children, ''+i+j));
+        } else {
+          return React.cloneElement(child, {key: i});
+        }
+      })
+    }
+
+    const content = recursivelyCheckAndAdd(this.props.children,'0');
 
     return (
       <View
