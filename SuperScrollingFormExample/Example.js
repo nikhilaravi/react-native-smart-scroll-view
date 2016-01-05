@@ -44,6 +44,7 @@ class Example extends Component {
             superscroll = 'text'
             style       = {styles.textInput}
             moveToNext  = {true}
+            autoCorrect = {false}
           />
           <TextInput
             superscroll='text'
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
       },
     footer: {
-      height: 70,
+      height: 200,
       backgroundColor: 'yellow'
     },
     header: {

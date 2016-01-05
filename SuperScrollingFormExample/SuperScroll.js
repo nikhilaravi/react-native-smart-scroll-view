@@ -47,7 +47,7 @@ export default class SuperScroll extends Component {
   constructor(){
     super();
     this.state = {
-      scrollPosition     : 0
+      scrollPosition : 0
     }
     this._refCreator           = this._refCreator.bind(this);
     this._focusNode            = this._focusNode.bind(this);
@@ -105,6 +105,7 @@ export default class SuperScroll extends Component {
     }
 
     const scrollWindowHeight = this._findScrollWindowHeight(keyboardHeight)
+
     this.setState({
       scrollWindowHeight,
       keyBoardUp: true
@@ -115,8 +116,10 @@ export default class SuperScroll extends Component {
         const py = Y - this.state.scrollPosition;
 
         if ( py + H > scrollWindowHeight ){
-          this._superScroll.scrollTo((Y + H) - scrollWindowHeight);
-          this.setState({ scrollPosition:(Y + H) - scrollWindowHeight })
+          const nextScrollPosition = (Y + H) - scrollWindowHeight;
+
+          this._superScroll.scrollTo(nextScrollPosition);
+          this.setState({scrollPosition:nextScrollPosition})
         } else if ( py < 0 ) {
           this._superScroll.scrollTo(Y)
           this.setState({ scrollPosition: Y })
@@ -166,17 +169,20 @@ export default class SuperScroll extends Component {
           }
         }}
       >
-        <View style = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : { flex: 1}}>
+        <View
+          style = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : { flex: 1}}
+        >
           <ScrollView
             ref                              = { component => this._superScroll=component}
             automaticallyAdjustContentInsets = {false}
             scrollsToTop                     = {false}
-            scrollEnabled                    = {this.state.keyBoardUp ? false : true}
+            scrollEnabled                    = {this.state.keyBoardUp || this.props.alwaysScrollable}
             style                            = {{ flex: 1}}
             onScroll                         = {this._updateScrollPosition}
             scrollEventThrottle              = {16}
             contentContainerStyle            = {this.props.contentContainerStyle}
             centerContent                    = {true}
+            keyboardShouldPersistTaps        = {true}
           >
             {content}
           </ScrollView>
