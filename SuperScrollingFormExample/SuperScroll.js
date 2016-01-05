@@ -52,6 +52,7 @@ export default class SuperScroll extends Component {
     this._refCreator           = this._refCreator.bind(this);
     this._focusNode            = this._focusNode.bind(this);
     this._keyboardWillHide     = this._keyboardWillHide.bind(this);
+    this._keyboardWillShow     = this._keyboardWillShow.bind(this);
     this._updateScrollPosition = this._updateScrollPosition.bind(this);
   }
 
@@ -74,6 +75,12 @@ export default class SuperScroll extends Component {
 
   _keyboardWillShow(e) {
     console.log(e);
+    const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+
+    this.setState({
+      scrollWindowHeight,
+      keyBoardUp: true
+    })
   }
 
   _keyboardWillHide() {
@@ -91,41 +98,29 @@ export default class SuperScroll extends Component {
     this[ref].focus()
   }
 
-  _focusNode (focusedNode, type) {
-    let keyboardHeight;
-    switch (type) {
-      case 'password':
-        keyboardHeight = 230;
-        break;
-      case 'number':
-        keyboardHeight = 230;
-        break;
-      default:
-        keyboardHeight = 226;
-    }
-
-    const scrollWindowHeight = this._findScrollWindowHeight(keyboardHeight)
-
-    this.setState({
-      scrollWindowHeight,
-      keyBoardUp: true
-    }, () => {
+  _focusNode (focusedNode) {
+    setTimeout(() => {
+      const {
+        scrollPosition,
+        scrollWindowHeight,
+      }         = this.state;
       const num = React.findNodeHandle(this._superScroll);
 
-      this[focusedNode].measureLayout(num ,(X,Y,W,H)=>{
-        const py = Y - this.state.scrollPosition;
 
-        if ( py + H > scrollWindowHeight ){
-          const nextScrollPosition = (Y + H) - scrollWindowHeight;
+        this[focusedNode].measureLayout(num, (X,Y,W,H) => {
+          const py = Y - scrollPosition;
 
-          this._superScroll.scrollTo(nextScrollPosition);
-          this.setState({scrollPosition:nextScrollPosition})
-        } else if ( py < 0 ) {
-          this._superScroll.scrollTo(Y)
-          this.setState({ scrollPosition: Y })
-        }
-      });
-    })
+          if ( py + H > scrollWindowHeight ){
+            const nextScrollPosition = (Y + H) - scrollWindowHeight;
+
+            this._superScroll.scrollTo(nextScrollPosition);
+            this.setState({scrollPosition:nextScrollPosition })
+          } else if ( py < 0 ) {
+            this._superScroll.scrollTo(Y)
+            this.setState({ scrollPosition: Y })
+          }
+        });
+      }, 0);
   }
 
   _updateScrollPosition(event){
@@ -176,7 +171,7 @@ export default class SuperScroll extends Component {
             ref                              = { component => this._superScroll=component}
             automaticallyAdjustContentInsets = {false}
             scrollsToTop                     = {false}
-            scrollEnabled                    = {this.state.keyBoardUp || this.props.alwaysScrollable}
+            scrollEnabled                    = {this.state.keyBoardUp}
             style                            = {{ flex: 1}}
             onScroll                         = {this._updateScrollPosition}
             scrollEventThrottle              = {16}

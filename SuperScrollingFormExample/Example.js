@@ -32,7 +32,6 @@ class Example extends Component {
             superscroll = 'text'
             style       = {styles.textInput}
             moveToNext  = {true}
-            autoCorrect = {false}
           />
           <TextInput
             superscroll = 'text'
@@ -44,7 +43,7 @@ class Example extends Component {
             superscroll = 'text'
             style       = {styles.textInput}
             moveToNext  = {true}
-            autoCorrect = {false}
+            autoCorrect = {true}
           />
           <TextInput
             superscroll='text'
