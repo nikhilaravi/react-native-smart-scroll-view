@@ -6,7 +6,8 @@ import React, {
   ScrollView,
   DeviceEventEmitter,
   Dimensions,
-  LayoutAnimation
+  LayoutAnimation,
+  PropTypes,
 } from 'react-native';
 
 const {
@@ -69,12 +70,17 @@ export default class SuperScroll extends Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    if (props.forceFocusFieldIndex !== this.props.forceFocusFieldIndex){
+      this._focusField('input_' + props.forceFocusFieldIndex)
+    }
+  }
+
   componentWillUnmount() {
     this._listeners.forEach((listener) => listener.remove());
   }
 
   _keyboardWillShow(e) {
-    console.log(e);
     const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
 
     this.setState({
@@ -105,7 +111,6 @@ export default class SuperScroll extends Component {
         scrollWindowHeight,
       }         = this.state;
       const num = React.findNodeHandle(this._superScroll);
-
 
         this[focusedNode].measureLayout(num, (X,Y,W,H) => {
           const py = Y - scrollPosition;
@@ -185,4 +190,9 @@ export default class SuperScroll extends Component {
       </View>
     );
   }
+}
+
+SuperScroll.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.element),
+  contentContainerStyle: PropTypes.number
 }
