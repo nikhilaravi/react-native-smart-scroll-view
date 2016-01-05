@@ -133,6 +133,11 @@ export default class SuperScroll extends Component {
   }
 
   render () {
+    const {
+      children: scrollChildren,
+      contentContainerStyle,
+      scrollContainerStyle
+    }                = this.props;
     let inputIndex   = 0;
     const superClone = (element, i) => {
       const { superScrollOptions } = element.props;
@@ -168,45 +173,52 @@ export default class SuperScroll extends Component {
       })
     }
 
-    const content = recursivelyCheckAndAdd(this.props.children,'0');
+    const content = recursivelyCheckAndAdd(scrollChildren, '0');
 
     return (
       <View
-        style = {{ flex: 1}}
+        style = {scrollContainerStyle}
         onLayout = {x => {
-          const {y, height}  = x.nativeEvent.layout;
-          const spaceBelow   = screenHeight - y - height;
+          const { y, height } = x.nativeEvent.layout;
+          const spaceBelow    = screenHeight - y - height;
 
           this._findScrollWindowHeight = (keyboardHeight) => {
             return height - Math.max(keyboardHeight - spaceBelow, 0);
           }
         }}
       >
-        <View
-          style = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : { flex: 1}}
+        <ScrollView
+          ref                              = { component => this._superScroll=component}
+          automaticallyAdjustContentInsets = {false}
+          scrollsToTop                     = {false}
+          scrollEnabled                    = {this.state.keyBoardUp}
+          style                            = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
+          onScroll                         = {this._updateScrollPosition}
+          scrollEventThrottle              = {16}
+          contentContainerStyle            = {contentContainerStyle}
+          centerContent                    = {true}
+          keyboardShouldPersistTaps        = {true}
         >
-          <ScrollView
-            ref                              = { component => this._superScroll=component}
-            automaticallyAdjustContentInsets = {false}
-            scrollsToTop                     = {false}
-            scrollEnabled                    = {this.state.keyBoardUp}
-            style                            = {{ flex: 1}}
-            onScroll                         = {this._updateScrollPosition}
-            scrollEventThrottle              = {16}
-            contentContainerStyle            = {this.props.contentContainerStyle}
-            centerContent                    = {true}
-            keyboardShouldPersistTaps        = {true}
-          >
-            {content}
-          </ScrollView>
-        </View>
+          {content}
+        </ScrollView>
       </View>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  flex1: {
+    flex: 1
+  }
+})
+
 SuperScroll.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
-  contentContainerStyle: PropTypes.number,
-  forceFocusFieldIndex: PropTypes.number
+  children:              PropTypes.arrayOf(PropTypes.element),
+  forceFocusFieldIndex:  PropTypes.number,
+  scrollContainerStyle:  PropTypes.number,
+  contentContainerStyle: PropTypes.number
+}
+
+SuperScroll.defaultProps = {
+  scrollContainerStyle: styles.flex1
 }
