@@ -194,5 +194,6 @@ export default class SuperScroll extends Component {
 
 SuperScroll.propTypes = {
   children: PropTypes.arrayOf(PropTypes.element),
-  contentContainerStyle: PropTypes.number
+  contentContainerStyle: PropTypes.number,
+  forceFocusFieldIndex: PropTypes.number
 }
