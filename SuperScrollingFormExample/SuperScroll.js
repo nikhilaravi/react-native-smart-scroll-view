@@ -71,7 +71,7 @@ export default class SuperScroll extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.forceFocusFieldIndex !== this.props.forceFocusFieldIndex){
+    if (props.forceFocusFieldIndex !== undefined){
       this._focusField('input_' + props.forceFocusFieldIndex)
     }
   }
