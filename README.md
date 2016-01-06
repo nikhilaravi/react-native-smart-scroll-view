@@ -1,10 +1,14 @@
 # react-native-smart-scroll-view
 
-Wrapper around React Native ScrollView.
+[![NPM](https://nodei.co/npm-dl/react-native-smart-scroll-view.png?months=3)](https://nodei.co/npm/react-native-smart-scroll-view/)
 
-Handles keyboard events and autoscrolls the view so that the focussed text input field is positioned above the keyboard.
+A wrapper around react-native ScrollView to handle keyboard events and auto adjust input fields to be visible above keyboard on focus.
 
-Use around components with TextInput fields positioned low in the view.
+Takes in your components and recursively searches for any component (i.e. TextInput) that is given `smartScrollOptions` as a prop. Further props are added to these components to ensure they are always visible above the keyboard and within the ScrollView when focused.
+
+There is also the option to autofocus the next component with `smartScrollOptions` on text input submission and the ability to autofocus any smart component by specifying the index.
+
+Great for use with forms which have multiple TextInput fields!  
 
 ## Getting Started
 
@@ -57,7 +61,7 @@ For each native TextInput component that you would like to use please provide th
 | Key  | Type | Description |
 | :------------ |:---------------:| :-----|
 | type | enum (`text`) | 'text' option only for now |
-| moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page |
+| moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
 
 
@@ -71,7 +75,7 @@ If `moveToNext` in `smartScrollOptions` is true and `type = 'text'`:
 
 ### Example Usage
 
-This a simple example of the SmartScrollView in use. To see a more exciting example visit this  [example](https://github.com/jrans/react-native-smart-scroll-view/blob/master/SuperScrollingFormExample/Example.js).
+This a simple example of the SmartScrollView in use for an input form. To see a more exciting example visit this  [example](https://github.com/jrans/react-native-smart-scroll-view/blob/master/SuperScrollingFormExample/Example.js).
 
 ```js
 
@@ -114,14 +118,11 @@ class Example extends Component {
 
 ### TODO
 
-- Allow for more types other than text input to be super scrollable.
-  - I.e. a customisable picker component that can be used to replace keyboard and select value from picker.
+- Allow for more types other than text input to have smart scroll functionality.
+  - i.e. a customisable picker component that can be used to replace keyboard to allow the user to select a value from a picker.
   - Any image, button, slider....
-- Allow for header above keyboard.
-- Better animations.
+- Allow for header/banner above keyboard.
+- Better animations....
 - Your issues/suggestions!
-
-
-
 
 ##### Feel free to comment, question, create issues, submit PRs... to make this view even smarter x
