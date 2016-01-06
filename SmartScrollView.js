@@ -26,7 +26,7 @@ const animations               = {
   }
 };
 
-export default class SmartScrollView extends Component {
+class SmartScrollView extends Component {
 
   constructor(){
     super();
@@ -241,6 +241,8 @@ SmartScrollView.defaultProps = {
   contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
   onScroll:                     () => {}
 };
+
+export default SmartScrollView;
 
 // import dismissKeyboard from 'dismissKeyboard';
 // this._scrollTap            = this._scrollTap.bind(this);

@@ -3,14 +3,13 @@ import React, {
   View,
   TextInput,
   StyleSheet,
-  ScrollView,
   Text,
   TouchableOpacity
 } from 'react-native';
 
 import dismissKeyboard from 'dismissKeyboard';
 
-import SmartScrollView from '../SmartScrollView.js';
+import SmartScrollView from 'react-native-smart-scroll-view';
 
 export default class Example extends Component {
 
