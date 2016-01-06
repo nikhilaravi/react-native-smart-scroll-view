@@ -44,7 +44,7 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 #### SmartScrollView Props
 
 | Prop  | Default  | Type | Description |
-| :------------ |:---------------:| :---------------:| :-----|
+| :------------: |:---------------:| :---------------:|
 | forceFocusFieldIndex | `undefined` |`number` | Force scroll the view to the TextInput field at the specified index (Chosen TextInputs components indexed in order from 0) |
 | scrollContainerStyle | `{flex: 1}` | `number` | Style options for the View that wraps the ScrollView, the ScrollView will take up all available space. |
 | scrollPadding | `5` | `number` | Padding between the top of the keyboard/ScrollView and the focused TextInput field |
