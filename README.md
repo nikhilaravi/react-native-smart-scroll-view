@@ -1,6 +1,8 @@
-# React-native-super-scrolling-form
+# react-native-smart-scroll-view
 
-Wrapper around React Native ScrollView which handles keyboard events and autoscrolls the text input field so it is positioned above the keyboard.
+Wrapper around React Native ScrollView.
+
+Handles keyboard events and autoscrolls the view so that the focussed text input field is positioned above the keyboard.
 
 Use around components with TextInput fields positioned low in the view.
 
@@ -8,45 +10,50 @@ Use around components with TextInput fields positioned low in the view.
 
 - [Installation](#installation)
 - [Properties](#properties)
-  + [Super Scroll View Props](#super-scroll-view-props)
+  - [Smart View Props](#smart-view-props)
 - [Example Usage](#example-usage)
+- [Future Features](#future-features)
 
 
 ### Installation
 
 ```bash
-$ npm i react-native-super-scrolling-form --save
+$ npm i react-native-smart-scroll-view --save
 ```
 
 ### Properties
 
-#### Super Scroll View Props
+#### SmartScrollView Props
 
 | Prop  | Default  | Type | Description |
 | :------------ |:---------------:| :---------------:| :-----|
-| forceFocusFieldIndex | null | `number` | index of a TextInput field in the form to force scroll the view to this field |
-| scrollContainerStyle | {flex: 1} | `number` | style options for the ScrollView container |
-| contentContainerStyle | {flex: 1} | `number` | style to be set to the ScrollView `contentContainerStyle` prop |
-| scrollPadding | 5 | `number` | Padding between the top of the keyboard and the focussed text input field |
+| forceFocusFieldIndex | null | `number` | Force scroll the view to the TextInput field at the specified index (TextInput components indexed in order from 0) |
+| scrollContainerStyle | {flex: 1} | `number` | Style options for the ScrollView container View |
+| scrollPadding | 5 | `number` | Padding between the top of the keyboard and the focussed TextInput field |
+| contentContainerStyle | {flex: 1} | `number` | Set to the ScrollView `contentContainerStyle` prop |
+| zoomScale | 1 | `number` | Set to the ScrollView `zoomScale` prop |
+| showsVerticalScrollIndicator | true | `bool` | Set to the ScrollView `showsVerticalScrollIndicator` prop |
+| contentInset | {top: 0, left: 0, bottom: 0, right: 0} | `object` | Set to the ScrollView `contentInset` prop  |
+| onScroll | () => {} | `func` | Function will be called in the function set to ScrollView `onScroll` prop |
 
 #### TextInput Props
 
-##### SuperScrollOptions
+##### SmartScrollOptions
 
 An object with the following optional keys:
 
 | Key  | Default  | Type | Description |
 | :------------ |:---------------:| :---------------:| :-----|
-| onSubmitEditing | null | `function` | function that takes a callback (could be used for input validation). The callback will be the function to move to the next field in the form.|
-| moveToNext | null | `bool` | if 'true', the next input field will be focussed when the submit button on the keyboard is pressed |
-| type | 'text' | enum (`text`) | 'text' option uses native iOS keyboard. May add option to use picker keyboard|
+| onSubmitEditing |  | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focussed. |
+| moveToNext | null | `bool` | If 'true', the next TextInput field will be focussed when the submit button on the keyboard is pressed. Should be set to 'false' or omitted for the last input field on the page |
+| type | 'text' | enum (`text`) | 'text' option uses native iOS keyboard. May add option to use picker keyboard |
 
 
 #### Native TextInput Props
 
 | Key  | Default  | Type | Description |
 | :------------ |:---------------:| :---------------:| :-----|
-| onFocus | null | `function` | this is called inside SuperScrollView component when the TextInput node is focussed |
+| onFocus | null | `func` | Function called inside SmartScrollView component when the TextInput node is focussed |
 
 ### Example Usage
 
@@ -59,7 +66,7 @@ import React, {
   ScrollView
 } from 'react-native';
 
-import SuperScroll from 'react-native-super-scrolling-form';
+import SmartScrollView from 'react-native-smart-scroll-view';
 
 class Example extends Component {
 
@@ -74,7 +81,7 @@ class Example extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}/>
-        <SuperScroll
+        <SmartScrollView
           contentContainerStyle = { styles.contentContainerStyle }
           forceFocusFieldIndex  = { this.state.focusFieldIndex }
         >
@@ -94,7 +101,7 @@ class Example extends Component {
             style              = {styles.textInput}
             autoCorrect        = {false}
           />
-        </SuperScroll>
+        </SmartScrollView>
       </View>
     )
   }
@@ -119,3 +126,8 @@ const styles = StyleSheet.create({
 })
 
 ```
+
+### Future Features
+
+* PickerIOS instead of native keyboard
+* Custom TextInput component instead of native TextInput.
