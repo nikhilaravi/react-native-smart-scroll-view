@@ -2,6 +2,8 @@
 
 [![NPM](https://nodei.co/npm-dl/react-native-smart-scroll-view.png?months=3)](https://nodei.co/npm/react-native-smart-scroll-view/)
 
+A pure JS React Native Component for IOS.
+
 A wrapper around react-native ScrollView to handle keyboard events and auto adjust input fields to be visible above keyboard on focus.
 
 Takes in your components and recursively searches for any component (i.e. TextInput) that is given `smartScrollOptions` as a prop. Further props are added to these components to ensure they are always visible above the keyboard and within the ScrollView when focused.

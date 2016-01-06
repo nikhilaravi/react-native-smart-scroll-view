@@ -22,7 +22,8 @@
     "component",
     "smart-scroll-view",
     "view",
-    "scrolling"
+    "scrolling",
+    "ios"
   ],
   "author": "nikhilaravi, jrans",
   "license": "ISC",
