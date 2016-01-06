@@ -1,0 +1,36 @@
+{
+  "name": "react-native-smart-scroll-view",
+  "version": "1.0.0",
+  "description": "Handles keyboard events and auto adjusts content to be visible above keyboard on focus. Further scrolling features available.",
+  "main": "SmartScrollView.js",
+  "scripts": {
+    "test": "LOL TESTS"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrans/react-native-smart-scroll-view.git"
+  },
+  "keywords": [
+    "smart",
+    "scroll",
+    "ScrollView",
+    "react",
+    "react-native",
+    "keyboard",
+    "TextInput",
+    "react-component",
+    "component",
+    "smart-scroll-view",
+    "view",
+    "scrolling"
+  ],
+  "author": "jrans, nikhilaravi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrans/react-native-smart-scroll-view/issues"
+  },
+  "homepage": "https://github.com/jrans/react-native-smart-scroll-view#readme",
+  "dependencies": {
+    "react-native": "^0.17.0"
+  }
+}
