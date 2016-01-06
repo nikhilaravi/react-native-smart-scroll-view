@@ -1,46 +1,30 @@
 import React, {
   Component,
   View,
-  TextInput,
   StyleSheet,
   ScrollView,
   DeviceEventEmitter,
   Dimensions,
   LayoutAnimation,
-  PropTypes,
+  PropTypes
 } from 'react-native';
 
-const {
-  height: screenHeight,
-  width: screenWidth
-} = Dimensions.get('window');
+const { height: screenHeight } = Dimensions.get('window');
 
 const animations = {
-    layout: {
-        spring: {
-            duration: 250,
-            create: {
-                duration: 250,
-                type: LayoutAnimation.Types.easeInEaseOut,
-                property: LayoutAnimation.Properties.opacity
-            },
-            update: {
-                type: LayoutAnimation.Types.spring,
-                springDamping: 200
-            }
-        },
-        easeInEaseOut: {
-            duration: 50,
-            create: {
-                type: LayoutAnimation.Types.easeInEaseOut,
-                property: LayoutAnimation.Properties.scaleXY
-            },
-            update: {
-                delay: 500,
-                type: LayoutAnimation.Types.easeInEaseOut
-            }
-        }
+  layout: {
+    easeInEaseOut: {
+      duration: 250,
+      create: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.scaleXY
+      },
+      update: {
+        delay: 0,
+        type: LayoutAnimation.Types.easeInEaseOut
+      }
     }
+  }
 };
 
 export default class SuperScroll extends Component {
@@ -48,7 +32,7 @@ export default class SuperScroll extends Component {
   constructor(){
     super();
     this.state = {
-      scrollPosition : 0
+      scrollPosition : 0,
     }
     this._refCreator           = this._refCreator.bind(this);
     this._focusNode            = this._focusNode.bind(this);
@@ -58,15 +42,18 @@ export default class SuperScroll extends Component {
   }
 
   componentDidMount() {
+    if (this.props.forceFocusFieldIndex !== undefined){
+      this._focusField('input_' + this.props.forceFocusFieldIndex)
+    }
     this._listeners = [
       DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow),
-      DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide)
+      DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide),
     ];
   }
 
   componentWillUpdate(props, state) {
     if (state.keyboardUp !== this.state.keyboardUp) {
-      LayoutAnimation.configureNext(animations.layout.spring)
+      LayoutAnimation.configureNext(animations.layout.easeInEaseOut)
     }
   }
 
@@ -109,26 +96,29 @@ export default class SuperScroll extends Component {
       const {
         scrollPosition,
         scrollWindowHeight,
-      }         = this.state;
-      const num = React.findNodeHandle(this._superScroll);
+      }                       = this.state;
+      const { scrollPadding } = this.props;
+      const num               = React.findNodeHandle(this._superScroll);
 
         this[focusedNode].measureLayout(num, (X,Y,W,H) => {
           const py = Y - scrollPosition;
 
           if ( py + H > scrollWindowHeight ){
-            const nextScrollPosition = (Y + H) - scrollWindowHeight;
+            const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
             this._superScroll.scrollTo(nextScrollPosition);
             this.setState({scrollPosition:nextScrollPosition })
           } else if ( py < 0 ) {
-            this._superScroll.scrollTo(Y)
-            this.setState({ scrollPosition: Y })
+            const nextScrollPosition = Y - scrollPadding;
+
+            this._superScroll.scrollTo(nextScrollPosition)
+            this.setState({ scrollPosition: nextScrollPosition})
           }
         });
       }, 0);
   }
 
-  _updateScrollPosition(event){
+  _updateScrollPosition (event) {
     this.setState({ scrollPosition: event.nativeEvent.contentOffset.y });
   }
 
@@ -136,7 +126,11 @@ export default class SuperScroll extends Component {
     const {
       children: scrollChildren,
       contentContainerStyle,
-      scrollContainerStyle
+      scrollContainerStyle,
+      zoomScale,
+      showsVerticalScrollIndicator,
+      contentInset,
+      onScroll
     }                = this.props;
     let inputIndex   = 0;
     const superClone = (element, i) => {
@@ -146,13 +140,19 @@ export default class SuperScroll extends Component {
       if (superScrollOptions.type === 'text') {
         const ref          = 'input_' + inputIndex;
 
-        superProps.onFocus = () => this._focusNode(ref,'text');
+        superProps.onFocus = () => {
+          superProps.onFocus = element.props.onFocus && element.props.onFocus();
+          this._focusNode(ref,'text')
+        };
         superProps.ref     = this._refCreator(ref);
 
         if (superScrollOptions.moveToNext === true) {
           const nextRef              = 'input_' + (inputIndex+1);
+          const focusNextField       = () => this._focusField(nextRef)
           superProps.blurOnSubmit    = false;
-          superProps.onSubmitEditing = () => this._focusField(nextRef);
+          superProps.onSubmitEditing = superScrollOptions.onSubmitEditing ?
+            superScrollOptions.onSubmitEditing(focusNextField) :
+            focusNextField
         }
         inputIndex += 1
       }
@@ -162,13 +162,16 @@ export default class SuperScroll extends Component {
 
     function recursivelyCheckAndAdd(children, i) {
       return React.Children.map(children, (child, j) => {
-
-        if (child.props.superScrollOptions !== undefined) {
-          return superClone(child, ''+i+j);
-        } else if (child.props.children !== undefined) {
-          return React.cloneElement(child, {key: i}, recursivelyCheckAndAdd(child.props.children, ''+i+j));
+        if (child.props !== undefined) {
+          if (child.props.superScrollOptions !== undefined) {
+            return superClone(child, ''+i+j);
+          } else if (child.props.children !== undefined) {
+            return React.cloneElement(child, {key: i}, recursivelyCheckAndAdd(child.props.children, ''+i+j));
+          } else {
+            return React.cloneElement(child, {key: i});
+          }
         } else {
-          return React.cloneElement(child, {key: i});
+          return child
         }
       })
     }
@@ -187,20 +190,29 @@ export default class SuperScroll extends Component {
           }
         }}
       >
-        <ScrollView
-          ref                              = { component => this._superScroll=component}
-          automaticallyAdjustContentInsets = {false}
-          scrollsToTop                     = {false}
-          scrollEnabled                    = {this.state.keyBoardUp}
-          style                            = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
-          onScroll                         = {this._updateScrollPosition}
-          scrollEventThrottle              = {16}
-          contentContainerStyle            = {contentContainerStyle}
-          centerContent                    = {true}
-          keyboardShouldPersistTaps        = {true}
+        <View
+          style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
         >
-          {content}
-        </ScrollView>
+          <ScrollView
+            ref                              = { component => this._superScroll=component }
+            automaticallyAdjustContentInsets = { false }
+            scrollsToTop                     = { false }
+            style                            = { styles.flex1 }
+            onScroll                         = { (event) => {
+              this._updateScrollPosition(event)
+              onScroll(event)
+            }}
+            scrollEventThrottle              = { 16 }
+            contentContainerStyle            = { contentContainerStyle }
+            contentInset                     = { contentInset }
+            zoomScale                        = { zoomScale }
+            showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
+            keyboardShouldPersistTaps        = { true }
+            bounces                          = { false }
+          >
+            {content}
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -210,15 +222,40 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1
   }
-})
+});
 
 SuperScroll.propTypes = {
-  children:              PropTypes.arrayOf(PropTypes.element),
-  forceFocusFieldIndex:  PropTypes.number,
-  scrollContainerStyle:  PropTypes.number,
-  contentContainerStyle: PropTypes.number
-}
+  forceFocusFieldIndex:         PropTypes.number,
+  scrollContainerStyle:         PropTypes.number,
+  contentContainerStyle:        PropTypes.number,
+  zoomScale:                    PropTypes.number,
+  showsVerticalScrollIndicator: PropTypes.bool,
+  contentInset:                 PropTypes.object,
+  onScroll:                     PropTypes.func
+};
 
 SuperScroll.defaultProps = {
-  scrollContainerStyle: styles.flex1
-}
+  scrollContainerStyle:         styles.flex1,
+  scrollPadding:                5,
+  zoomScale:                    1,
+  showsVerticalScrollIndicator: true,
+  contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
+  onScroll:                     () => {}
+};
+
+// import dismissKeyboard from 'dismissKeyboard';
+// this._scrollTap            = this._scrollTap.bind(this);
+// lastTap:         0
+// _scrollTap () {
+//   const {lastTap}  = this.state;
+//   const currentTap = new Date().getTime();
+//   console.log("tap")
+//
+//   if (currentTap - lastTap < 500) {
+//     dismissKeyboard()
+//   }
+//
+//   this.setState({
+//     lastTap: currentTap
+//   })
+// }
