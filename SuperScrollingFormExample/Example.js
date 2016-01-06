@@ -10,7 +10,7 @@ import React, {
 
 import dismissKeyboard from 'dismissKeyboard';
 
-import SuperScroll from '../SuperScroll.js';
+import SmartScrollView from '../SmartScrollView.js';
 
 export default class Example extends Component {
 
@@ -27,7 +27,7 @@ export default class Example extends Component {
             Super Scrolling Form
           </Text>
         </View>
-        <SuperScroll
+        <SmartScrollView
           contentContainerStyle = { styles.contentContainerStyle }
           forceFocusFieldIndex  = { this.state.focusFieldIndex }
           scrollPadding         = { 10 }
@@ -51,7 +51,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>default</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -63,7 +63,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>numeric</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -75,7 +75,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>email</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -87,7 +87,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>ascii-capable</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -99,7 +99,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>numb-&-punc</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -111,7 +111,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>url</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -123,7 +123,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>number-pad</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -135,7 +135,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>phone-pad</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -147,7 +147,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>name-phone</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -159,7 +159,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>decimal-pad</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext: true,
                 type:       'text'
               }}
@@ -171,7 +171,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>twitter</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 moveToNext:      true,
                 type:            'text'
               }}
@@ -184,7 +184,7 @@ export default class Example extends Component {
           <View style = {styles.inputContainer} >
             <Text style = {styles.fieldName}>web-search</Text>
             <TextInput
-              superScrollOptions = {{
+              smartScrollOptions = {{
                 type:       'text'
               }}
               style              = {styles.textInput}
@@ -192,7 +192,7 @@ export default class Example extends Component {
               keyboardType       = 'web-search'
             />
           </View>
-        </SuperScroll>
+        </SmartScrollView>
         <View style={styles.footer}/>
       </View>
     )

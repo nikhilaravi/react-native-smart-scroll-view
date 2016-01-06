@@ -10,8 +10,7 @@ import React, {
 } from 'react-native';
 
 const { height: screenHeight } = Dimensions.get('window');
-
-const animations = {
+const animations               = {
   layout: {
     easeInEaseOut: {
       duration: 250,
@@ -27,7 +26,7 @@ const animations = {
   }
 };
 
-export default class SuperScroll extends Component {
+export default class SmartScrollView extends Component {
 
   constructor(){
     super();
@@ -80,7 +79,7 @@ export default class SuperScroll extends Component {
     this.setState({
       keyBoardUp: false
     });
-    this._superScroll && this._superScroll.scrollTo(0);
+    this._smartScroll && this._smartScroll.scrollTo(0);
   }
 
   _refCreator (ref) {
@@ -98,7 +97,7 @@ export default class SuperScroll extends Component {
         scrollWindowHeight,
       }                       = this.state;
       const { scrollPadding } = this.props;
-      const num               = React.findNodeHandle(this._superScroll);
+      const num               = React.findNodeHandle(this._smartScroll);
 
         this[focusedNode].measureLayout(num, (X,Y,W,H) => {
           const py = Y - scrollPosition;
@@ -106,12 +105,12 @@ export default class SuperScroll extends Component {
           if ( py + H > scrollWindowHeight ){
             const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
-            this._superScroll.scrollTo(nextScrollPosition);
+            this._smartScroll.scrollTo(nextScrollPosition);
             this.setState({scrollPosition:nextScrollPosition })
           } else if ( py < 0 ) {
             const nextScrollPosition = Y - scrollPadding;
 
-            this._superScroll.scrollTo(nextScrollPosition)
+            this._smartScroll.scrollTo(nextScrollPosition)
             this.setState({ scrollPosition: nextScrollPosition})
           }
         });
@@ -133,38 +132,38 @@ export default class SuperScroll extends Component {
       onScroll
     }                = this.props;
     let inputIndex   = 0;
-    const superClone = (element, i) => {
-      const { superScrollOptions } = element.props;
-      let superProps               = { key: i };
+    const smartClone = (element, i) => {
+      const { smartScrollOptions } = element.props;
+      let smartProps               = { key: i };
 
-      if (superScrollOptions.type === 'text') {
+      if (smartScrollOptions.type === 'text') {
         const ref          = 'input_' + inputIndex;
 
-        superProps.onFocus = () => {
-          superProps.onFocus = element.props.onFocus && element.props.onFocus();
+        smartProps.onFocus = () => {
+          smartProps.onFocus = element.props.onFocus && element.props.onFocus();
           this._focusNode(ref,'text')
         };
-        superProps.ref     = this._refCreator(ref);
+        smartProps.ref     = this._refCreator(ref);
 
-        if (superScrollOptions.moveToNext === true) {
+        if (smartScrollOptions.moveToNext === true) {
           const nextRef              = 'input_' + (inputIndex+1);
           const focusNextField       = () => this._focusField(nextRef)
-          superProps.blurOnSubmit    = false;
-          superProps.onSubmitEditing = superScrollOptions.onSubmitEditing ?
-            superScrollOptions.onSubmitEditing(focusNextField) :
+          smartProps.blurOnSubmit    = false;
+          smartProps.onSubmitEditing = smartScrollOptions.onSubmitEditing ?
+            smartScrollOptions.onSubmitEditing(focusNextField) :
             focusNextField
         }
         inputIndex += 1
       }
 
-      return React.cloneElement(element, superProps)
+      return React.cloneElement(element, smartProps)
     }
 
     function recursivelyCheckAndAdd(children, i) {
       return React.Children.map(children, (child, j) => {
         if (child.props !== undefined) {
-          if (child.props.superScrollOptions !== undefined) {
-            return superClone(child, ''+i+j);
+          if (child.props.smartScrollOptions !== undefined) {
+            return smartClone(child, ''+i+j);
           } else if (child.props.children !== undefined) {
             return React.cloneElement(child, {key: i}, recursivelyCheckAndAdd(child.props.children, ''+i+j));
           } else {
@@ -194,7 +193,7 @@ export default class SuperScroll extends Component {
           style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
         >
           <ScrollView
-            ref                              = { component => this._superScroll=component }
+            ref                              = { component => this._smartScroll=component }
             automaticallyAdjustContentInsets = { false }
             scrollsToTop                     = { false }
             style                            = { styles.flex1 }
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
   }
 });
 
-SuperScroll.propTypes = {
+SmartScrollView.propTypes = {
   forceFocusFieldIndex:         PropTypes.number,
   scrollContainerStyle:         PropTypes.number,
   contentContainerStyle:        PropTypes.number,
@@ -234,7 +233,7 @@ SuperScroll.propTypes = {
   onScroll:                     PropTypes.func
 };
 
-SuperScroll.defaultProps = {
+SmartScrollView.defaultProps = {
   scrollContainerStyle:         styles.flex1,
   scrollPadding:                5,
   zoomScale:                    1,
