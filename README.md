@@ -27,6 +27,7 @@ $ npm i react-native-super-scrolling-form --save
 | forceFocusFieldIndex | null | `number` | index of a TextInput field in the form to force scroll the view to this field |
 | scrollContainerStyle | {flex: 1} | `number` | style options for the ScrollView container |
 | contentContainerStyle | {flex: 1} | `number` | style to be set to the ScrollView `contentContainerStyle` prop |
+| scrollPadding | 5 | `number` | Padding between the top of the keyboard and the focussed text input field |
 
 #### TextInput Props
 
