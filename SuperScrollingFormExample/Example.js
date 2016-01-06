@@ -10,7 +10,7 @@ import React, {
 
 import dismissKeyboard from 'dismissKeyboard';
 
-import SuperScroll from './SuperScroll.js';
+import SuperScroll from '../SuperScroll.js';
 
 export default class Example extends Component {
 

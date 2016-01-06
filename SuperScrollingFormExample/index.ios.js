@@ -13,11 +13,9 @@ var {
 import Example from './Example.js';
 
 class SuperScrollingFormExample extends Component {
-
   render () {
     return <Example/>
   }
-
 };
 
 AppRegistry.registerComponent('SuperScrollingFormExample', () => SuperScrollingFormExample);
