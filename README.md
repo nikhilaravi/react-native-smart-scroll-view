@@ -55,7 +55,7 @@ For each native TextInput component that you would like to use please provide th
 ##### smartScrollOptions - An object with the following keys:
 
 | Key  | Type | Description |
-| :------------ |:---------------:| :---------------:| :-----|
+| :------------ |:---------------:| :-----|
 | type | enum (`text`) | 'text' option only for now |
 | moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page |
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
@@ -97,7 +97,7 @@ class Example extends Component {
           <View>
             <TextInput
               superScrollOptions = {{
-                type:       'text'
+                type: 'text'
               }}
               style              = {styles.textInput}
               autoCorrect        = {false}

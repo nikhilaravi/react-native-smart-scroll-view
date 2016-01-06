@@ -24,7 +24,7 @@
     "view",
     "scrolling"
   ],
-  "author": "jrans, nikhilaravi",
+  "author": "nikhilaravi, jrans",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jrans/react-native-smart-scroll-view/issues"
