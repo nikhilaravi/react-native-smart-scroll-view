@@ -36,7 +36,7 @@ export default class Example extends Component {
             onPress = {dismissKeyboard}
           >
             <Text style = {styles.buttonText}>
-              Example to remove keyboard
+              Example to remove keyboard with dismissKeyboard
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
