@@ -155,10 +155,9 @@ class SmartScrollView extends Component {
         }
         inputIndex += 1
       } else if (smartScrollOptions.type === 'custom') {
-          const ref          = 'input_' + inputIndex;
-          smartProps.ref     = this._refCreator(ref);
-          inputIndex        += 1
-        }
+        const ref          = 'input_' + inputIndex;
+        smartProps.ref     = this._refCreator(ref);
+        inputIndex        += 1
       }
 
       return React.cloneElement(element, smartProps)
