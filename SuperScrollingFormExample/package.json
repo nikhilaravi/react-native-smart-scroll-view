@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "react-native": "^0.17.0",
-    "react-native-smart-scroll-view": "^1.1.0"
+    "react-native-smart-scroll-view": "^1.2.0"
   }
 }

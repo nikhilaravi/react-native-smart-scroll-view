@@ -150,10 +150,15 @@ class SmartScrollView extends Component {
           const focusNextField       = () => this._focusField(nextRef)
           smartProps.blurOnSubmit    = false;
           smartProps.onSubmitEditing = smartScrollOptions.onSubmitEditing ?
-            smartScrollOptions.onSubmitEditing(focusNextField) :
+            () => smartScrollOptions.onSubmitEditing(focusNextField) :
             focusNextField
         }
         inputIndex += 1
+      } else if (smartScrollOptions.type === 'custom') {
+          const ref          = 'input_' + inputIndex;
+          smartProps.ref     = this._refCreator(ref);
+          inputIndex        += 1
+        }
       }
 
       return React.cloneElement(element, smartProps)

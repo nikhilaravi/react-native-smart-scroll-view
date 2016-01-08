@@ -62,7 +62,7 @@ For each native TextInput component that you would like to use please provide th
 
 | Key  | Type | Description |
 | :------------: |:---------------:| :-----:|
-| type | enum (`text`) | 'text' option only for now |
+| type | enum (`text`,`custom`) | 'text' option will have below option, 'custom' will just locate the next one, further scrolling must be done by forcing the index |
 | moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
 
