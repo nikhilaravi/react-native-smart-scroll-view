@@ -40,7 +40,6 @@ class RegistrationPage extends Component {
       fields,
       changeInput,
       validateInput,
-      buttonText,
       showTerms,
       changeTandC,
       submitContactInfo,
