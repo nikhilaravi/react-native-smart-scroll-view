@@ -87,10 +87,20 @@ class SmartScrollView extends Component {
   }
 
   _focusField (ref) {
-    this[ref].focus()
+    const node     = this[ref];
+    const { type } = node.props.smartScrollOptions;
+
+    switch(type) {
+      case 'text':
+        this[ref].focus();
+        break;
+      case 'custom':
+        this._focusNode(ref);
+    }
+
   }
 
-  _focusNode (focusedNode) {
+  _focusNode (ref) {
     setTimeout(() => {
       const {
         scrollPosition,
@@ -99,7 +109,7 @@ class SmartScrollView extends Component {
       const { scrollPadding } = this.props;
       const num               = React.findNodeHandle(this._smartScroll);
 
-        this[focusedNode].measureLayout(num, (X,Y,W,H) => {
+        this[ref].measureLayout(num, (X,Y,W,H) => {
           const py = Y - scrollPosition;
 
           if ( py + H > scrollWindowHeight ){
@@ -122,6 +132,15 @@ class SmartScrollView extends Component {
   }
 
   render () {
+    setTimeout(()=> this._container.measureLayout(1, (x,y,width,height) => {
+      console.log(x,y,width,height)
+      this._findScrollWindowHeight = (keyboardHeight) => {
+        const spaceBelow    = screenHeight - y - height;
+
+        return height - Math.max(keyboardHeight - spaceBelow, 0);
+      }
+    }),0);
+
     const {
       children: scrollChildren,
       contentContainerStyle,
@@ -141,7 +160,7 @@ class SmartScrollView extends Component {
 
         smartProps.onFocus = () => {
           smartProps.onFocus = element.props.onFocus && element.props.onFocus();
-          this._focusNode(ref,'text')
+          this._focusNode(ref)
         };
         smartProps.ref     = this._refCreator(ref);
 
@@ -183,15 +202,8 @@ class SmartScrollView extends Component {
 
     return (
       <View
+        ref   = { component => this._container=component }
         style = {scrollContainerStyle}
-        onLayout = {x => {
-          const { y, height } = x.nativeEvent.layout;
-          const spaceBelow    = screenHeight - y - height;
-
-          this._findScrollWindowHeight = (keyboardHeight) => {
-            return height - Math.max(keyboardHeight - spaceBelow, 0);
-          }
-        }}
       >
         <View
           style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
