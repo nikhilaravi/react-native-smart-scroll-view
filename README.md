@@ -2,6 +2,8 @@
 
 [![NPM](https://nodei.co/npm-dl/react-native-smart-scroll-view.png?months=3)](https://nodei.co/npm/react-native-smart-scroll-view/)
 
+![ComplexFormExample](https://raw.githubusercontent.com/jrans/react-native-smart-scroll-view/master/complexFormExample.gif)
+
 A pure JS React Native Component for IOS.
 
 A wrapper around react-native ScrollView to handle keyboard events and auto adjust input fields to be visible above keyboard on focus.
@@ -14,22 +16,10 @@ Great for use with forms which have multiple TextInput fields!
 
 ## Getting Started
 
-- [Example](#example)
 - [Installation](#installation)
 - [Properties](#properties)
 - [Example Usage](#example-usage)
 - [TODO](#todo)
-
-### Example
-
-Here is the smart-scroll-view in action. To run the code yourself open and run the Xcode project.
-
-```bash
-open SuperScrollingFormExample/ios/SuperScrollingFormExample.xcodeproj
-```
-
-![SmartScrollViewExample](https://github.com/jrans/react-native-smart-scroll-view/blob/master/SuperScrollingFormExample/exampleInAction.gif)
-
 
 ### Installation
 
@@ -78,45 +68,16 @@ If `moveToNext` in `smartScrollOptions` is true and `type = 'text'`:
 
 ### Example Usage
 
-This a simple example of the SmartScrollView in use for an input form. To see a more exciting example visit this  [example](https://github.com/jrans/react-native-smart-scroll-view/blob/master/SuperScrollingFormExample/Example.js).
+Code for the above gif is found [here](https://github.com/jrans/react-native-smart-scroll-view/blob/master/complexFormExample.js)
 
-```js
+Here is another [example](https://github.com/jrans/react-native-smart-scroll-view/blob/master/SuperScrollingFormExample/Example.js) of the smart-scroll-view in action.
 
-import SmartScrollView from 'react-native-smart-scroll-view';
+![SmartScrollViewExample](https://raw.githubusercontent.com/jrans/react-native-smart-scroll-view/master/SuperScrollingFormExample/exampleInAction.gif)
 
-class Example extends Component {
+To run the code yourself and play around open and run the Xcode project.
 
-  render () {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}/>
-        <SmartScrollView
-          contentContainerStyle = { styles.contentContainerStyle }
-        >
-          <TextInput
-            superScrollOptions = {{
-              moveToNext: true,
-              type:       'text'
-            }}
-            style              = {styles.textInput}
-            autoCorrect        = {false}
-          />
-          <View>
-            <TextInput
-              superScrollOptions = {{
-                type: 'text'
-              }}
-              style              = {styles.textInput}
-              autoCorrect        = {false}
-            />
-          </View>  
-        </SmartScrollView>
-      </View>
-    )
-  }
-}
-
-
+```bash
+open SuperScrollingFormExample/ios/SuperScrollingFormExample.xcodeproj
 ```
 
 ### TODO
