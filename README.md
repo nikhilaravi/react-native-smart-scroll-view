@@ -10,7 +10,7 @@ A wrapper around react-native ScrollView to handle keyboard events and auto adju
 
 Takes in your components and recursively searches for any component (i.e. TextInput) that is given `smartScrollOptions` as a prop. Further props are added to these components to ensure they are always visible above the keyboard and within the ScrollView when focused.
 
-There is also the option to autofocus the next component with `smartScrollOptions` on text input submission and the ability to autofocus any component by setting the `smartScrollOptions`props appropriately (more info below) and specifying the index.
+There is also the option to autofocus the next component with `smartScrollOptions` on TextInput submission, and the ability to autofocus **any** component by setting the `smartScrollOptions`props appropriately and specifying the index of the component (more info below) .
 
 Great for use with forms which have multiple TextInput fields!  
 
@@ -47,9 +47,9 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 
 #### Smart Component Props
 
-Smart components can be the native 'TextInput' or any other component such as 'View'.
+Smart components can be the native 'TextInput' s, other component like 'View' s or your own custom components.
 
-For each native TextInput component that you would like to use provide the prop `smartScrollOptions` alongside the normal props. Beware some native props set may be modified by the Smart Scroll View, see below.
+For each component that you would like to use, provide the prop `smartScrollOptions` alongside the normal props. **Beware*** some props of native components like TextInputs may be modified by the Smart Scroll View (see below).
 
 ##### smartScrollOptions - An object with the following keys:
 
@@ -58,7 +58,7 @@ For each native TextInput component that you would like to use provide the prop 
 | type | enum (`text`,`custom`) | For type 'text' the 'moveToNext' and 'onSubmitEditing' options can be set (see below). For type 'custom' further scrolling must be done by forcing the index |
 | moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
-| scrollRef | `string` | Way to reference a particular component which can then be set to forceFocusField to have control where the focus is |
+| scrollRef | `string` | To be used in conjunction with the 'forceFocusField' prop of the 'SmartScrollView'. Use 'scrollRef' to reference a particular component which can then be set to forceFocusField to have control where the focus is |
 
 
 ##### How We Modify TextInput Props
