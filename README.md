@@ -10,7 +10,7 @@ A wrapper around react-native ScrollView to handle keyboard events and auto adju
 
 Takes in your components and recursively searches for any component (i.e. TextInput) that is given `smartScrollOptions` as a prop. Further props are added to these components to ensure they are always visible above the keyboard and within the ScrollView when focused.
 
-There is also the option to autofocus the next component with `smartScrollOptions` on text input submission and the ability to autofocus any smart component by specifying the index.
+There is also the option to autofocus the next component with `smartScrollOptions` on text input submission and the ability to autofocus any component by setting the `smartScrollOptions`props appropriately (more info below) and specifying the index.
 
 Great for use with forms which have multiple TextInput fields!  
 
@@ -35,7 +35,7 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 
 | Prop  | Default  | Type | Description |
 | :------------ |:---------------:| :---------------:| :-----|
-| forceFocusField | `undefined` |`number` or `string` | Force scroll the view to the TextInput field at the specified index (smart children indexed in order from 0) or scrollRef you have given to your smart child (see smartScrollOptions below) |
+| forceFocusField | `undefined` |`number` or `string` | Force scroll the view to the TextInput field at the specified index (smart children indexed in order from 0) or 'scrollRef' you have given to your smart child (see smartScrollOptions below) |
 | scrollContainerStyle | `{flex: 1}` | `number` | Style options for the View that wraps the ScrollView, the ScrollView will take up all available space. |
 | scrollPadding | `5` | `number` | Padding between the top of the keyboard/ScrollView and the focused TextInput field |
 | contentContainerStyle | `{flex: 1}` | `number` | Set to the ScrollView contentContainerStyle prop |
@@ -43,29 +43,32 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 | showsVerticalScrollIndicator | `true` | `bool` | Set to the ScrollView showsVerticalScrollIndicator prop |
 | contentInset | `{top: 0, left: 0, bottom: 0, right: 0}` | `object` | Set to the ScrollView contentInset prop  |
 | onScroll | `() => {}` | `func` | Set to the ScrollView onScroll function. It will be called alongside our own |
-| onRefFocus | `()=>{}` | `func` | Gives back the scrollRef of the node whenever a smart component is focused |
+| onRefFocus | `()=>{}` | `func` | Gives back the 'ref' of the node whenever a smart component is focused |
 
-#### TextInput Props
+#### Smart Component Props
 
-For each native TextInput component that you would like to use please provide the prop `smartScrollOptions` alongside the normal props. Beware some props modified, see below.
+Smart components can be the native 'TextInput' or any other component such as 'View'.
+
+For each native TextInput component that you would like to use provide the prop `smartScrollOptions` alongside the normal props. Beware some native props set may be modified by the Smart Scroll View, see below.
 
 ##### smartScrollOptions - An object with the following keys:
 
 | Key  | Type | Description |
 | :------------: |:---------------:| :-----:|
-| type | enum (`text`,`custom`) | 'text' option will have below option, 'custom' will just locate the next one, further scrolling must be done by forcing the index |
+| type | enum (`text`,`custom`) | For type 'text' the 'moveToNext' and 'onSubmitEditing' options can be set (see below). For type 'custom' further scrolling must be done by forcing the index |
 | moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
-| scrollRef | `string` | Way to reference a particular component to use the forceFocusField to have control of where the focus is |
+| scrollRef | `string` | Way to reference a particular component which can then be set to forceFocusField to have control where the focus is |
 
 
 ##### How We Modify TextInput Props
 
-We attach our own `onFocus` function and will call yours alongside.
+For any component which has 'smartScrollOptions.type = text', it is inferred that it is either a 'TextInput' component or contains a 'TextInput' component. The props of the enclosing 'TextInput' component are modified in the following way.
 
-If `moveToNext` in `smartScrollOptions` is true and `type = 'text'`:
-* We replace `onSubmitEditing` with our own. See above.
-* `blurOnSubmit` is set to false
+* We attach our own `onFocus` function and will call yours alongside.
+* If `moveToNext` in `smartScrollOptions` is true:
+  * The`onSubmitEditing` is replaced with our own. See above.
+  * `blurOnSubmit` is set to false
 
 ### Example Usage
 
@@ -75,7 +78,7 @@ Here is another [example](https://github.com/jrans/react-native-smart-scroll-vie
 
 ![SmartScrollViewExample](https://raw.githubusercontent.com/jrans/react-native-smart-scroll-view/master/SuperScrollingFormExample/exampleInAction.gif)
 
-To run the code yourself and play around open and run the Xcode project.
+To run the code yourself and play around, open and run the Xcode project.
 
 ```bash
 open SuperScrollingFormExample/ios/SuperScrollingFormExample.xcodeproj
@@ -90,4 +93,4 @@ open SuperScrollingFormExample/ios/SuperScrollingFormExample.xcodeproj
 - Better animations....
 - Your issues/suggestions!
 
-##### Feel free to comment, question, create issues, submit PRs... to make this view even smarter x
+##### Feel free to comment, question, create issues, submit PRs... to make this view even smarter
