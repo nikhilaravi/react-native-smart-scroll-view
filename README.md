@@ -43,6 +43,7 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 | showsVerticalScrollIndicator | `true` | `bool` | Set to the ScrollView showsVerticalScrollIndicator prop |
 | contentInset | `{top: 0, left: 0, bottom: 0, right: 0}` | `object` | Set to the ScrollView contentInset prop  |
 | onScroll | `() => {}` | `func` | Set to the ScrollView onScroll function. It will be called alongside our own |
+| onRefFocus | `()=>{}` | `func` | Gives back the scrollRef of the node whenever a smart component is focused |
 
 #### TextInput Props
 
