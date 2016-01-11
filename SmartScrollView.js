@@ -41,8 +41,8 @@ class SmartScrollView extends Component {
   }
 
   componentDidMount() {
-    if (this.props.forceFocusFieldIndex !== undefined){
-      this._focusField('input_' + this.props.forceFocusFieldIndex)
+    if (this.props.forceFocusField !== this.state.focusedField){
+      this._focusField('input_' + this.props.forceFocusField)
     }
     this._listeners = [
       DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow),
@@ -57,8 +57,8 @@ class SmartScrollView extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.forceFocusFieldIndex !== undefined){
-      this._focusField('input_' + props.forceFocusFieldIndex)
+    if (props.forceFocusField !== this.state.focusedField){
+      this._focusField('input_' + props.forceFocusField)
     }
   }
 
@@ -82,8 +82,10 @@ class SmartScrollView extends Component {
     this._smartScroll && this._smartScroll.scrollTo(0);
   }
 
-  _refCreator (ref) {
-    return component => this[ref] = component
+  _refCreator () {
+    const refs = arguments;
+
+    return component => Object.keys(refs).forEach(i => this[refs[i]] = component);
   }
 
   _focusField (ref) {
@@ -101,14 +103,20 @@ class SmartScrollView extends Component {
   }
 
   _focusNode (ref) {
-    setTimeout(() => {
-      const {
-        scrollPosition,
-        scrollWindowHeight,
-      }                       = this.state;
-      const { scrollPadding } = this.props;
-      const num               = React.findNodeHandle(this._smartScroll);
+    const {
+      scrollPosition,
+      scrollWindowHeight,
+    }                       = this.state;
+    const {
+      scrollPadding,
+      onRefFocus
+    }                       = this.props;
+    const num               = React.findNodeHandle(this._smartScroll);
+    const strippedBackRef   = ref.slice('input_'.length);
 
+    setTimeout(() => {
+        onRefFocus(strippedBackRef);
+        this.setState({focusedField: strippedBackRef})
         this[ref].measureLayout(num, (X,Y,W,H) => {
           const py = Y - scrollPosition;
 
@@ -133,7 +141,6 @@ class SmartScrollView extends Component {
 
   render () {
     setTimeout(()=> this._container.measureLayout(1, (x,y,width,height) => {
-      console.log(x,y,width,height)
       this._findScrollWindowHeight = (keyboardHeight) => {
         const spaceBelow    = screenHeight - y - height;
 
@@ -155,28 +162,28 @@ class SmartScrollView extends Component {
       const { smartScrollOptions } = element.props;
       let smartProps               = { key: i };
 
-      if (smartScrollOptions.type === 'text') {
+      if (smartScrollOptions.type !== undefined) {
         const ref          = 'input_' + inputIndex;
 
-        smartProps.onFocus = () => {
-          smartProps.onFocus = element.props.onFocus && element.props.onFocus();
-          this._focusNode(ref)
-        };
-        smartProps.ref     = this._refCreator(ref);
+        smartProps.ref = this._refCreator(ref, smartScrollOptions.scrollRef && 'input_' + smartScrollOptions.scrollRef);
 
-        if (smartScrollOptions.moveToNext === true) {
-          const nextRef              = 'input_' + (inputIndex+1);
-          const focusNextField       = () => this._focusField(nextRef)
-          smartProps.blurOnSubmit    = false;
-          smartProps.onSubmitEditing = smartScrollOptions.onSubmitEditing ?
-            () => smartScrollOptions.onSubmitEditing(focusNextField) :
-            focusNextField
+        if (smartScrollOptions.type === 'text') {
+          smartProps.onFocus = () => {
+            smartProps.onFocus = element.props.onFocus && element.props.onFocus();
+            this._focusNode(ref)
+          };
+
+          if (smartScrollOptions.moveToNext === true) {
+            const nextRef              = 'input_' + (inputIndex+1);
+            const focusNextField       = () => this._focusField(nextRef)
+            smartProps.blurOnSubmit    = false;
+            smartProps.onSubmitEditing = smartScrollOptions.onSubmitEditing ?
+              () => smartScrollOptions.onSubmitEditing(focusNextField) :
+              focusNextField
+          }
         }
+
         inputIndex += 1
-      } else if (smartScrollOptions.type === 'custom') {
-        const ref          = 'input_' + inputIndex;
-        smartProps.ref     = this._refCreator(ref);
-        inputIndex        += 1
       }
 
       return React.cloneElement(element, smartProps)
@@ -240,13 +247,14 @@ const styles = StyleSheet.create({
 });
 
 SmartScrollView.propTypes = {
-  forceFocusFieldIndex:         PropTypes.number,
+  forceFocusField:              PropTypes.oneOf(PropTypes.number, PropTypes.string),
   scrollContainerStyle:         PropTypes.number,
   contentContainerStyle:        PropTypes.number,
   zoomScale:                    PropTypes.number,
   showsVerticalScrollIndicator: PropTypes.bool,
   contentInset:                 PropTypes.object,
-  onScroll:                     PropTypes.func
+  onScroll:                     PropTypes.func,
+  onRefFocus:                   PropTypes.func,
 };
 
 SmartScrollView.defaultProps = {
@@ -255,7 +263,8 @@ SmartScrollView.defaultProps = {
   zoomScale:                    1,
   showsVerticalScrollIndicator: true,
   contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
-  onScroll:                     () => {}
+  onScroll:                     () => {},
+  onRefFocus:                   () => {}
 };
 
 export default SmartScrollView;

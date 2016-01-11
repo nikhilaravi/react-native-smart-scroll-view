@@ -28,7 +28,7 @@ export default class Example extends Component {
         </View>
         <SmartScrollView
           contentContainerStyle = { styles.contentContainerStyle }
-          forceFocusFieldIndex  = { this.state.focusFieldIndex }
+          forceFocusField       = { this.state.focusField }
           scrollPadding         = { 10 }
         >
           <TouchableOpacity
@@ -41,7 +41,7 @@ export default class Example extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style   = {styles.button}
-            onPress = {() => {this.setState({focusFieldIndex: 10})}}
+            onPress = {() => {this.setState({focusField: 10})}}
           >
             <Text style = {styles.buttonText}>
               Example to force move to index 10

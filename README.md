@@ -45,7 +45,7 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 
 | Prop  | Default  | Type | Description |
 | :------------ |:---------------:| :---------------:| :-----|
-| forceFocusFieldIndex | `undefined` |`number` | Force scroll the view to the TextInput field at the specified index (Chosen TextInputs components indexed in order from 0) |
+| forceFocusField | `undefined` |`number` or `string` | Force scroll the view to the TextInput field at the specified index (smart children indexed in order from 0) or scrollRef you have given to your smart child (see smartScrollOptions below) |
 | scrollContainerStyle | `{flex: 1}` | `number` | Style options for the View that wraps the ScrollView, the ScrollView will take up all available space. |
 | scrollPadding | `5` | `number` | Padding between the top of the keyboard/ScrollView and the focused TextInput field |
 | contentContainerStyle | `{flex: 1}` | `number` | Set to the ScrollView contentContainerStyle prop |
@@ -65,6 +65,7 @@ For each native TextInput component that you would like to use please provide th
 | type | enum (`text`,`custom`) | 'text' option will have below option, 'custom' will just locate the next one, further scrolling must be done by forcing the index |
 | moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
 | onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
+| scrollRef | `string` | Way to reference a particular component to use the forceFocusField to have control of where the focus is |
 
 
 ##### How We Modify TextInput Props
