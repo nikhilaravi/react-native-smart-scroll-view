@@ -173,11 +173,14 @@ class SmartScrollView extends Component {
 
   _renderPicker () {
     const {
-      props: { smartScrollOptions: {
-        pickerType,
-        pickerProps,
-        pickerTitle
-      } }
+      props: {
+        smartScrollOptions: {
+          pickerType,
+          pickerProps,
+          pickerTitle,
+        },
+        onSubmitEditing
+      }
     } = this['input_' + this.state.focusedField]
 
     return (
@@ -186,7 +189,11 @@ class SmartScrollView extends Component {
           pickerType  = { pickerType }
           pickerProps = { pickerProps }
           pickerTitle = { pickerTitle }
-          onDone      = { () => this._dismissPicker(()=>{}) }
+          onDone      = { () => this._dismissPicker(() => {
+            if ( onSubmitEditing !== undefined ) {
+              onSubmitEditing();
+            }
+          })}
         />
       </View>
     );
@@ -236,20 +243,19 @@ class SmartScrollView extends Component {
 
         smartProps.ref = this._refCreator(ref, scrollRef && 'input_' + scrollRef);
 
+        if (moveToNext === true) {
+          const nextRef              = 'input_' + (inputIndex+1);
+          const focusNextField       = () => this._focusField(nextRef)
+          smartProps.blurOnSubmit    = false;
+          smartProps.onSubmitEditing = onSubmitEditing ?
+            () => onSubmitEditing(focusNextField) :
+            focusNextField
+        }
         if (type === 'text') {
           smartProps.onFocus = () => {
             smartProps.onFocus = element.props.onFocus && element.props.onFocus();
             this._focusNode(ref)
           };
-
-          if (moveToNext === true) {
-            const nextRef              = 'input_' + (inputIndex+1);
-            const focusNextField       = () => this._focusField(nextRef)
-            smartProps.blurOnSubmit    = false;
-            smartProps.onSubmitEditing = onSubmitEditing ?
-              () => onSubmitEditing(focusNextField) :
-              focusNextField
-          }
         } else if (type === 'picker') {
           smartProps.onPress = () => {
             this._focusField(ref)
