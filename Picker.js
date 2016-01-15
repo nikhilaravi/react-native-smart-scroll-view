@@ -22,6 +22,19 @@ class Picker extends Component {
       onDone
     } = this.props;
 
+    const {
+      value,
+      date,
+      initialValue,
+      initialDate
+    } = pickerProps;
+
+    const modifiedPickerProps = {
+      ...pickerProps,
+      value: value === undefined ? initialValue : value,
+      date:  date === undefined  ? initialDate : date
+    };
+
     let Picker;
 
     if (type === 'date') {
@@ -42,7 +55,7 @@ class Picker extends Component {
         <View style = { styles.pickerWrapper }>
           <Picker
             style = {styles.picker}
-            {...pickerProps}
+            {...modifiedPickerProps}
           />
         </View>
       </View>

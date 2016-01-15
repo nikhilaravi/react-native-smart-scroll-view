@@ -1,6 +1,6 @@
 {
   "name": "react-native-smart-scroll-view",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Handles keyboard events and auto adjusts content to be visible above keyboard on focus. Further scrolling features available.",
   "main": "SmartScrollView.js",
   "scripts": {
