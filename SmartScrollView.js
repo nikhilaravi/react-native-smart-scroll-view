@@ -12,7 +12,7 @@ import React, {
 
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 
-import Picker      from './Picker.js';
+import Picker                     from './Picker.js';
 export { default as PickerInput } from './PickerInput.js';
 
 const animations = {
@@ -50,30 +50,30 @@ class SmartScrollView extends Component {
 
   constructor(){
     super();
-    this.state = {
-      scrollPosition : 0,
-      pickerOpen     : false
-    };
+    this.state = { scrollPosition: 0, pickerOpen: false };
     [
-      '_refCreator',
       '_focusNode',
       '_keyboardWillHide',
       '_keyboardWillShow',
       '_updateScrollPosition',
       '_dismissPicker',
       '_openPicker',
-      '_dismissKeyboard'
+      '_dismissKeyboard',
+      '_generateSmartContent',
+      '_renderPicker',
+      '_findHeights'
     ].forEach((method) => this[method] = this[method].bind(this))
   }
 
   componentDidMount() {
-    if (this.props.forceFocusField !== this.state.focusedField){
-      this._focusField('input_' + this.props.forceFocusField)
-    }
+    setTimeout(this._findHeights, 0);
     this._listeners = [
       DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow),
       DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide),
     ];
+    if (this.props.forceFocusField !== this.state.focusedField){
+      this._focusField('input_' + this.props.forceFocusField)
+    }
   }
 
   componentWillUpdate(props, state) {
@@ -83,112 +83,99 @@ class SmartScrollView extends Component {
   }
 
   componentWillReceiveProps(props) {
-    // if (props.forceFocusField !== this.state.focusedField){
-    //   this._focusField('input_' + props.forceFocusField, true)
-    // }
+    setTimeout(this._findHeights,0);
+    if (
+      this.props.forceFocusField !== props.forceFocusField &&
+      this.props.forceFocusField !== this.state.focusedField
+    ) { this._focusField('input_' + props.forceFocusField, true) }
   }
 
   componentWillUnmount() {
     this._listeners.forEach((listener) => listener.remove());
   }
 
-  _keyboardWillShow(e) {
-    console.log('_keyboatdwillshow called with', 'state', this.state, 'props', this.props)
-    const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+  _findHeights () {
+    this._container.measureLayout(1, (x, y, w, height) => {
+      this._findScrollWindowHeight = keyboardHeight => {
+        const spaceBelow    = screenHeight - y - height;
 
-    this.setState({
-      scrollWindowHeight,
-      keyboardUp: true
+        return height - Math.max(keyboardHeight - spaceBelow, 0);
+      }
+      this.setState({ SVDisplacementFromTop: y, originalHeight: height })
+      this._smartScroll.refs.InnerScrollView.measure((x,y,w,height) => {
+        this.setState({contentHeight:height});
+      });
     })
   }
 
-  _keyboardWillHide() {
-    console.log('_fkeyboardWillHide called' ,this.state, this.props)
-    this._dismissKeyboard();
-  }
-
-  _refCreator () {
-    const refs = arguments;
-
-    return component => Object.keys(refs).forEach(i => this[refs[i]] = component);
-  }
-
   _focusField (ref, forced) {
-    console.log('_focusField called with', ref, forced, 'state', this.state, 'props', this.props)
     const node            = this[ref];
     const { type }        = node.props.smartScrollOptions;
-
     const strippedBackRef = ref.slice('input_'.length);
 
     this.setState({focusedField: strippedBackRef}, () => {
       switch (type) {
         case 'text':
-          if (forced) {
-            return this[ref].focus();
-          } else {
-            this._dismissPicker()
-          }
+          if (forced) { return this[ref].focus() }
+          else { this._dismissPicker() }
           break;
         case 'picker':
           dismissKeyboard();
           this._openPicker();
           break;
         case 'custom':
-          // dismissKeyboard();
-          // this._dismissPicker();
+          dismissKeyboard();
+          this._dismissPicker();
+          this.setState({scrollWindowHeight:this.state.originalHeight});
           break;
+        this.props.onRefFocus(strippedBackRef);
       }
-      this.props.onRefFocus(strippedBackRef);
-      setTimeout(this._focusNode, 250)
+      setTimeout(this._focusNode, 1)
     })
   }
 
-
-
   _focusNode () {
-    console.log('_focusNode called with', 'state', this.state, 'props', this.props);
-    const ref = this.state.focusedField;
     const {
-      state: { scrollPosition, scrollWindowHeight },
-      props: { scrollPadding }
+      state: { scrollPosition, scrollWindowHeight, contentHeight, focusedField: ref },
+      props: { scrollPadding },
+      _smartScroll
     }                     = this;
-    const num             = React.findNodeHandle(this._smartScroll);
+    const num             = React.findNodeHandle(_smartScroll);
 
     setTimeout(() => {
       this['input_'+ref].measureLayout(num, (X,Y,W,H) => {
         const py = Y - scrollPosition;
 
-        if ( py + H > scrollWindowHeight ){
-          const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
-
-          this._smartScroll.scrollTo(nextScrollPosition);
-          this.setState({scrollPosition:nextScrollPosition })
+        if (py + H > scrollWindowHeight) {
+          _smartScroll.scrollTo((Y + H) - scrollWindowHeight + scrollPadding)
         } else if ( py < 0 ) {
-          const nextScrollPosition = Y - scrollPadding;
-
-          this._smartScroll.scrollTo(nextScrollPosition)
-          this.setState({ scrollPosition: nextScrollPosition })
+           _smartScroll.scrollTo(Y - scrollPadding)
+        } else if (scrollPosition > (contentHeight - scrollWindowHeight)) {
+          _smartScroll.scrollTo(contentHeight - scrollWindowHeight);
         }
       });
     }, 0);
   }
 
-  _updateScrollPosition (event) {
-    this.setState({ scrollPosition: event.nativeEvent.contentOffset.y });
+  _keyboardWillShow(e) {
+    const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+
+    this.setState({ scrollWindowHeight, keyboardUp: true});
+  }
+
+  _keyboardWillHide() {
+    this._dismissKeyboard();
   }
 
   _dismissKeyboard () {
-    console.log('_dismissKeyboard called with', 'state', this.state, 'props', this.props)
-    this.setState({keyboardUp: false})
+    this.setState({keyboardUp: false});
   }
 
   _dismissPicker () {
-    console.log('_dismissPicker called with', 'state', this.state, 'props', this.props)
-    this.setState({pickerOpen: false})
+    this.setState({pickerOpen: false});
   }
 
   _openPicker () {
-    console.log('_openPicker called with', 'state', this.state, 'props', this.props)
     this.setState({
       pickerOpen:         true,
       scrollWindowHeight: this._findScrollWindowHeight(keyboardHeight),
@@ -196,31 +183,25 @@ class SmartScrollView extends Component {
   }
 
   _renderPicker () {
-    console.log('_renderPicker called with', 'state', this.state, 'props', this.props)
     const {
-      props: {
-        smartScrollOptions: {
-          type,
-          pickerType,
-          pickerProps,
-          pickerTitle,
-        },
-        onSubmitEditing
-      }
-    } = this['input_' + this.state.focusedField];
+      state: {focusedField, SVDisplacementFromTop},
+      _dismissPicker
+    } = this;
+    const { props: {
+      smartScrollOptions: { type, pickerType, pickerProps, pickerTitle },
+      onSubmitEditing
+    }} = this['input_' + focusedField];
 
     if (type === 'picker') {
       return (
-        <View style = {[styles.picker, {top: screenHeight - this._y - keyboardHeight}]}>
+        <View style = {[styles.picker, {top: screenHeight - SVDisplacementFromTop - keyboardHeight}]}>
           <Picker
             pickerType  = { pickerType }
             pickerProps = { pickerProps }
             pickerTitle = { pickerTitle }
             onDone      = { () => {
-              this._dismissPicker();
-              if ( onSubmitEditing !== undefined ) {
-                onSubmitEditing();
-              }
+              _dismissPicker();
+              if ( onSubmitEditing !== undefined ) { onSubmitEditing() }
             }}
           />
         </View>
@@ -228,49 +209,21 @@ class SmartScrollView extends Component {
     }
   }
 
-  render () {
+  _updateScrollPosition (event) {
+    this.setState({ scrollPosition: event.nativeEvent.contentOffset.y });
+  }
 
-    setTimeout(()=> this._container.measureLayout(1, (x,y,width,height) => {
-      this._findScrollWindowHeight = keyboardHeight => {
-        const spaceBelow    = screenHeight - y - height;
-
-        return height - Math.max(keyboardHeight - spaceBelow, 0);
-      }
-      this._y = y;
-    }),0);
-
-    const {
-      props: {
-        children: scrollChildren,
-        contentContainerStyle,
-        scrollContainerStyle,
-        zoomScale,
-        showsVerticalScrollIndicator,
-        contentInset,
-        onScroll
-      },
-      state: {
-        pickerOpen,
-        scrollWindowHeight,
-        keyboardUp
-      }
-    }                = this;
+  _generateSmartContent (scrollChildren) {
     let inputIndex   = 0;
     const smartClone = (element, i) => {
-      const { smartScrollOptions } = element.props;
-      const {
-        type,
-        scrollRef,
-        moveToNext,
-        onSubmitEditing,
-        style
-      }                            = smartScrollOptions;
-      let smartProps               = { key: i };
+      const { smartScrollOptions }                                  = element.props;
+      const { type, scrollRef, moveToNext, onSubmitEditing, style } = smartScrollOptions;
+      let smartProps                                                = { key: i };
 
       if (type !== undefined) {
-        const ref = 'input_' + inputIndex;
-
-        smartProps.ref = this._refCreator(ref, scrollRef && 'input_' + scrollRef);
+        const ref      = 'input_' + inputIndex;
+        smartProps.ref = component => [ref, scrollRef && 'input_' + scrollRef]
+          .forEach(ref => this[ref] = component);
 
         if (moveToNext === true) {
           const nextRef              = 'input_' + (inputIndex+1);
@@ -286,25 +239,29 @@ class SmartScrollView extends Component {
             this._focusField(ref)
           };
         } else if (type === 'picker') {
-          smartProps.onPress = () => {
-            this._focusField(ref)
-          };
+          smartProps.onPress            = () => this._focusField(ref);
           smartProps.smartScrollOptions = smartScrollOptions;
           smartProps.style              = style;
           inputIndex                   += 1;
 
-          return React.cloneElement(<TouchableOpacity/>, smartProps, element)
-        }
+          return React.cloneElement(<TouchableOpacity/>, smartProps, element);
+        } else if (type === 'custom') {
+          smartProps.onPress            = () => this._focusField(ref);
+          smartProps.smartScrollOptions = smartScrollOptions;
+          smartProps.activeOpacity      = 0.95;
+          inputIndex                   += 1;
+          smartProps.style              = style;
 
+          return React.cloneElement(<TouchableOpacity/>, smartProps, element.props.children)
+        }
         inputIndex += 1
       }
-
-      return React.cloneElement(element, smartProps)
+      return React.cloneElement(element, smartProps);
     }
 
-    function recursivelyCheckAndAdd(children, i) {
+    const recursivelyCheckAndAdd = (children, i) => {
       return React.Children.map(children, (child, j) => {
-        if (child.props !== undefined) {
+        if (child && child.props !== undefined) {
           if (child.props.smartScrollOptions !== undefined) {
             return smartClone(child, ''+i+j);
           } else if (child.props.children !== undefined) {
@@ -318,7 +275,30 @@ class SmartScrollView extends Component {
       })
     }
 
-    const content = recursivelyCheckAndAdd(scrollChildren, '0');
+    return recursivelyCheckAndAdd(scrollChildren, '0');
+  }
+
+  render () {
+    const {
+      props: {
+        children: scrollChildren,
+        contentContainerStyle,
+        scrollContainerStyle,
+        zoomScale,
+        showsVerticalScrollIndicator,
+        contentInset,
+        onScroll
+      },
+      state: {
+        pickerOpen,
+        scrollWindowHeight,
+        keyboardUp
+      },
+      _generateSmartContent,
+      _updateScrollPosition,
+      _renderPicker
+    }             = this;
+    const content = _generateSmartContent(scrollChildren);
 
     return (
       <View
@@ -332,7 +312,7 @@ class SmartScrollView extends Component {
             scrollsToTop                     = { false }
             style                            = { styles.flex1 }
             onScroll                         = { (event) => {
-              this._updateScrollPosition(event);
+              _updateScrollPosition(event);
               onScroll(event);
             }}
             scrollEventThrottle              = { 16 }
@@ -345,7 +325,7 @@ class SmartScrollView extends Component {
           >
             {content}
           </ScrollView>
-          { pickerOpen && 'picker' && this._renderPicker() }
+          { pickerOpen && 'picker' && _renderPicker() }
         </View>
       </View>
     );
@@ -386,20 +366,3 @@ SmartScrollView.defaultProps = {
 };
 
 export default SmartScrollView;
-
-// import dismissKeyboard from 'dismissKeyboard';
-// this._scrollTap            = this._scrollTap.bind(this);
-// lastTap:         0
-// _scrollTap () {
-//   const {lastTap}  = this.state;
-//   const currentTap = new Date().getTime();
-//   console.log("tap")
-//
-//   if (currentTap - lastTap < 500) {
-//     dismissKeyboard()
-//   }
-//
-//   this.setState({
-//     lastTap: currentTap
-//   })
-// }
