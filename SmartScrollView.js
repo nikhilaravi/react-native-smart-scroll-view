@@ -98,7 +98,8 @@ class SmartScrollView extends Component {
     this._container.measureLayout(1, (x, y, w, height) => {
       this._findScrollWindowHeight = keyboardHeight => {
         const spaceBelow    = screenHeight - y - height;
-
+        // TODO: fix adjusting of height when there is space below the smart scroll view
+        
         return height - Math.max(keyboardHeight, 0);
       }
       this.setState({ SVDisplacementFromTop: y, originalHeight: height })
@@ -217,9 +218,10 @@ class SmartScrollView extends Component {
   _generateSmartContent (scrollChildren) {
     let inputIndex   = 0;
     const smartClone = (element, i) => {
-      const { smartScrollOptions }                                  = element.props;
+      const { smartScrollOptions }                                           = element.props;
       const { type, scrollRef, moveToNext, onSubmitEditing, style, onPress } = smartScrollOptions;
-      let smartProps                                                = { key: i };
+      let smartProps                                                         = { key: i };
+
       if (type !== undefined) {
         const ref      = 'input_' + inputIndex;
         smartProps.ref = component => [ref, scrollRef && 'input_' + scrollRef]
