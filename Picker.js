@@ -22,14 +22,47 @@ class Picker extends Component {
       onDone
     } = this.props;
 
+    const {
+      value,
+      date,
+      initialValue,
+      initialDate,
+      pickerData,
+      pickerItemKey,
+      pickerItemValue,
+      pickerItemLabel
+    } = pickerProps;
+
+    const modifiedPickerProps = {
+      ...pickerProps,
+      value: value === undefined ? initialValue : value,
+      date:  date === undefined  ? initialDate : date
+    };
+
     let Picker;
 
     if (type === 'date') {
-      Picker = DatePickerIOS;
+      Picker = (
+        <DatePickerIOS
+          style = {styles.picker}
+          {...modifiedPickerProps}
+        />
+      );
     } else if (type === 'custom') {
-      Picker = PickerIOS;
+      Picker = (
+        <PickerIOS {...modifiedPickerProps} >
+          {pickerData.map(elem => {
+            return (
+              <PickerIOS.Item
+                key   = { elem[pickerItemKey] }
+                value = { elem[pickerItemValue] }
+                label = { elem[pickerItemLabel] }
+              />
+            )
+          })}
+        </PickerIOS>
+      )
     }
-
     return (
       <View style = {styles.container} >
         <View style = {styles.pickerHeader} >
@@ -40,10 +73,7 @@ class Picker extends Component {
           </TouchableOpacity>
         </View>
         <View style = { styles.pickerWrapper }>
-          <Picker
-            style = {styles.picker}
-            {...pickerProps}
-          />
+          {Picker}
         </View>
       </View>
     );

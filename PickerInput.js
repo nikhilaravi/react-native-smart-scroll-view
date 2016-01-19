@@ -15,8 +15,8 @@ class PickerInput extends Component {
     } = this.props.smartScrollOptions;
 
     return (
-      <Text style = {[ textStyle, !(value || date) && { color: '#7a7a7a' } ]} >
-        { value || date.toDateString() || placeholder || 'PLACE HOLDER' }
+      <Text style = {[ textStyle, !(value || date) && { color: '#C7C7CD' } ]} >
+        { value || (date && date.toDateString()) || placeholder || 'PLACE HOLDER' }
       </Text>
     );
   }
