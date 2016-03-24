@@ -6,7 +6,8 @@ import React, {
   DeviceEventEmitter,
   Dimensions,
   LayoutAnimation,
-  PropTypes
+  PropTypes,
+  Platform
 } from 'react-native';
 
 const { height: screenHeight } = Dimensions.get('window');
@@ -45,8 +46,8 @@ class SmartScrollView extends Component {
       this._focusField('input_' + this.props.forceFocusField)
     }
     this._listeners = [
-      DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow),
-      DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide),
+      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardDidShow' : 'keyboardDidShow', this._keyboardWillShow),
+      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillHide' : 'keyboardDidHide', this._keyboardWillHide),
     ];
   }
 
@@ -57,7 +58,7 @@ class SmartScrollView extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.forceFocusField !== this.state.focusedField){
+    if (props.forceFocusField !== undefined && props.forceFocusField !== this.state.focusedField){
       this._focusField('input_' + props.forceFocusField)
     }
   }
@@ -67,30 +68,31 @@ class SmartScrollView extends Component {
   }
 
   _keyboardWillShow(e) {
-    const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+    if(this._findScrollWindowHeight) {
+      const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
 
-    this.setState({
-      scrollWindowHeight,
-      keyBoardUp: true
-    })
+      this.setState({
+        scrollWindowHeight,
+        keyBoardUp: true
+      })
+    }
   }
 
   _keyboardWillHide() {
     this.setState({
       keyBoardUp: false
     });
-    this._smartScroll && this._smartScroll.scrollTo(0);
+    this._smartScroll && this._smartScroll.scrollTo({y: 0});
   }
 
   _refCreator () {
     const refs = arguments;
-
     return component => Object.keys(refs).forEach(i => this[refs[i]] = component);
   }
 
   _focusField (ref) {
-    const node     = this[ref];
-    const { type } = node.props.smartScrollOptions;
+    const node = this[ref];
+    const {type} = node.props.smartScrollOptions;
 
     switch(type) {
       case 'text':
@@ -99,7 +101,6 @@ class SmartScrollView extends Component {
       case 'custom':
         this._focusNode(ref);
     }
-
   }
 
   _focusNode (ref) {
@@ -115,24 +116,24 @@ class SmartScrollView extends Component {
     const strippedBackRef   = ref.slice('input_'.length);
 
     setTimeout(() => {
-        onRefFocus(strippedBackRef);
-        this.setState({focusedField: strippedBackRef})
-        this[ref].measureLayout(num, (X,Y,W,H) => {
-          const py = Y - scrollPosition;
+      onRefFocus(strippedBackRef);
+      this.setState({focusedField: strippedBackRef})
+      this[ref].measureLayout(num, (X,Y,W,H) => {
+        const py = Y - scrollPosition;
 
-          if ( py + H > scrollWindowHeight ){
-            const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
+        if ( py + H > scrollWindowHeight ){
+          const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
-            this._smartScroll.scrollTo(nextScrollPosition);
-            this.setState({scrollPosition:nextScrollPosition })
-          } else if ( py < 0 ) {
-            const nextScrollPosition = Y - scrollPadding;
+          this._smartScroll.scrollTo({y: nextScrollPosition});
+          this.setState({scrollPosition:nextScrollPosition })
+        } else if ( py < 0 ) {
+          const nextScrollPosition = Y - scrollPadding;
 
-            this._smartScroll.scrollTo(nextScrollPosition)
-            this.setState({ scrollPosition: nextScrollPosition})
-          }
-        });
-      }, 0);
+          this._smartScroll.scrollTo({y: nextScrollPosition})
+          this.setState({ scrollPosition: nextScrollPosition})
+        }
+      });
+    }, 0);
   }
 
   _updateScrollPosition (event) {
