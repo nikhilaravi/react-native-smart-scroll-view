@@ -45,8 +45,9 @@ class SmartScrollView extends Component {
     if (this.props.forceFocusField !== this.state.focusedField){
       this._focusField('input_' + this.props.forceFocusField)
     }
+
     this._listeners = [
-      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillShow' : 'keyboardDidShow', this._keyboardWillShow),
+      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardDidShow' : 'keyboardDidShow', this._keyboardWillShow),
       DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillHide' : 'keyboardDidHide', this._keyboardWillHide),
     ];
   }
@@ -67,15 +68,19 @@ class SmartScrollView extends Component {
     this._listeners.forEach((listener) => listener.remove());
   }
 
-  _keyboardWillShow(e) {
-    if(this._findScrollWindowHeight) {
-      const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+  _findScrollWindowHeight(keyboardHeight){
+    const {x, y, width, height} = this._layout
+    const spaceBelow    = screenHeight - y - height;
+    return height - Math.max(keyboardHeight - spaceBelow, 0);
+  }
 
-      this.setState({
-        scrollWindowHeight,
-        keyBoardUp: true
-      })
-    }
+  _keyboardWillShow(e) {
+    const scrollWindowHeight = this._findScrollWindowHeight(e.endCoordinates.height)
+
+    this.setState({
+      scrollWindowHeight,
+      keyBoardUp: true
+    })
   }
 
   _keyboardWillHide() {
@@ -141,13 +146,6 @@ class SmartScrollView extends Component {
   }
 
   render () {
-    setTimeout(()=> this._container.measureLayout(1, (x,y,width,height) => {
-      this._findScrollWindowHeight = (keyboardHeight) => {
-        const spaceBelow    = screenHeight - y - height;
-
-        return height - Math.max(keyboardHeight - spaceBelow, 0);
-      }
-    }),0);
 
     const {
       children: scrollChildren,
@@ -212,6 +210,7 @@ class SmartScrollView extends Component {
       <View
         ref   = { component => this._container=component }
         style = {scrollContainerStyle}
+        onLayout={(e) => this._layout = e.nativeEvent.layout}
       >
         <View
           style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
