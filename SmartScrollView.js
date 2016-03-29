@@ -130,7 +130,7 @@ class SmartScrollView extends Component {
           const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
           this._smartScroll.scrollTo({y: nextScrollPosition});
-          this.setState({scrollPosition:nextScrollPosition })
+          this.setState({scrollPosition: nextScrollPosition })
         } else if ( py < 0 ) {
           const nextScrollPosition = Y - scrollPadding;
 
@@ -175,6 +175,11 @@ class SmartScrollView extends Component {
           if (smartScrollOptions.moveToNext === true) {
             const nextRef              = 'input_' + (inputIndex+1);
             const focusNextField       = () => this._focusField(nextRef)
+
+            if(typeof(element.props.returnKeyType) === 'undefined'){
+              smartProps.returnKeyType  = 'next'
+            }
+
             smartProps.blurOnSubmit    = false;
             smartProps.onSubmitEditing = smartScrollOptions.onSubmitEditing ?
               () => smartScrollOptions.onSubmitEditing(focusNextField) :
