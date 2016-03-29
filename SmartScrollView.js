@@ -47,7 +47,7 @@ class SmartScrollView extends Component {
     }
 
     this._listeners = [
-      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardDidShow' : 'keyboardDidShow', this._keyboardWillShow),
+      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillShow' : 'keyboardDidShow', this._keyboardWillShow),
       DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillHide' : 'keyboardDidHide', this._keyboardWillHide),
     ];
   }
