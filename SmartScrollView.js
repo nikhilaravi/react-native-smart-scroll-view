@@ -7,7 +7,7 @@ import ReactNative, {
   View,
   StyleSheet,
   ScrollView,
-  DeviceEventEmitter,
+  Keyboard,
   Dimensions,
   LayoutAnimation,
   Platform
@@ -50,8 +50,8 @@ class SmartScrollView extends Component {
     }
 
     this._listeners = [
-      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillShow' : 'keyboardDidShow', this._keyboardWillShow),
-      DeviceEventEmitter.addListener(Platform.OS == 'IOS' ? 'keyboardWillHide' : 'keyboardDidHide', this._keyboardWillHide),
+      Keyboard.addListener(Platform.OS == 'IOS' ? 'keyboardWillShow' : 'keyboardDidShow', this._keyboardWillShow),
+      Keyboard.addListener(Platform.OS == 'IOS' ? 'keyboardWillHide' : 'keyboardDidHide', this._keyboardWillHide),
     ];
   }
 
