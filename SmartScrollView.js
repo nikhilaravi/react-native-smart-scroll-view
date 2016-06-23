@@ -1,12 +1,15 @@
 import React, {
   Component,
+  PropTypes,
+} from 'react';
+
+import ReactNative, {
   View,
   StyleSheet,
   ScrollView,
   DeviceEventEmitter,
   Dimensions,
   LayoutAnimation,
-  PropTypes,
   Platform
 } from 'react-native';
 
@@ -117,7 +120,7 @@ class SmartScrollView extends Component {
       scrollPadding,
       onRefFocus
     }                       = this.props;
-    const num               = React.findNodeHandle(this._smartScroll);
+    const num               = ReactNative.findNodeHandle(this._smartScroll);
     const strippedBackRef   = ref.slice('input_'.length);
 
     setTimeout(() => {
