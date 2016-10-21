@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
 });
 
 SmartScrollView.propTypes = {
-  forceFocusField:              PropTypes.oneOf(PropTypes.number, PropTypes.string),
+  forceFocusField:              PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   scrollContainerStyle:         View.propTypes.style,
   contentContainerStyle:        View.propTypes.style,
   zoomScale:                    PropTypes.number,
