@@ -197,7 +197,7 @@ class SmartScrollView extends Component {
     }
 
     function recursivelyCheckAndAdd(children, i) {
-      return React.Children.map(children, (child, j) => {
+      const result = React.Children.map(children, (child, j) => {
         if (child && child.props !== undefined) {
           if (child.props.smartScrollOptions !== undefined) {
             return smartClone(child, ''+i+j);
@@ -210,6 +210,10 @@ class SmartScrollView extends Component {
           return child
         }
       })
+
+      if (result.length === 1) return result[0]
+
+      return result
     }
 
     const content = recursivelyCheckAndAdd(scrollChildren, '0');
