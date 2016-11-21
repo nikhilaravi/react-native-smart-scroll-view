@@ -163,6 +163,7 @@ class SmartScrollView extends Component {
       onScroll,
       keyboardDismissMode,
       keyboardShouldPersistTaps
+      bounces,
     }                = this.props;
     let inputIndex   = 0;
     const smartClone = (element, i) => {
@@ -240,8 +241,8 @@ class SmartScrollView extends Component {
             zoomScale                        = { zoomScale }
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
             keyboardShouldPersistTaps        = {keyboardShouldPersistTaps}
-            bounces                          = { false }
             keyboardDismissMode              = {keyboardDismissMode}
+            bounces                          = { bounces }
           >
             {content}
           </ScrollView>
@@ -262,6 +263,7 @@ SmartScrollView.propTypes = {
   onRefFocus:                   PropTypes.func,
   keyboardDismissMode:          PropTypes.string,
   keyboardShouldPersistTaps:          PropTypes.string,
+  bounces:                      PropTypes.bool,
 };
 
 SmartScrollView.defaultProps = {
