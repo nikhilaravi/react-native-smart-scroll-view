@@ -72,9 +72,13 @@ class SmartScrollView extends Component {
   }
 
   _findScrollWindowHeight(keyboardHeight){
-    const {x, y, width, height} = this._layout
-    const spaceBelow    = screenHeight - y - height;
-    return height - Math.max(keyboardHeight - spaceBelow, 0);
+    if(this._layout){
+      const {x, y, width, height} = this._layout
+      const spaceBelow    = screenHeight - y - height;
+      return height - Math.max(keyboardHeight - spaceBelow, 0);
+    }else{
+      return 0
+    }
   }
 
   _keyboardWillShow(e) {
