@@ -129,7 +129,11 @@ class SmartScrollView extends Component {
       this[ref].measureLayout(num, (X,Y,W,H) => {
         const py = Y - scrollPosition;
 
-        if ( py + H > scrollWindowHeight ){
+        if (!scrollWindowHeight) {
+          setTimeout(() => {
+            this._focusNode(ref);
+          }, 100);
+        } else if ( py + H > scrollWindowHeight ){
           const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
           this._smartScroll.scrollTo({y: nextScrollPosition});
