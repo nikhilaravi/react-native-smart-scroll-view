@@ -254,7 +254,8 @@ class SmartScrollView extends Component {
 
 const styles = StyleSheet.create({
   flex1: {
-    flexGrow: 1
+    flexGrow: 1,
+    flexBasis:1
   }
 });
 
