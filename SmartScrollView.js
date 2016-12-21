@@ -224,14 +224,12 @@ class SmartScrollView extends Component {
         style = {scrollContainerStyle}
         onLayout={(e) => this._layout = e.nativeEvent.layout}
       >
-        <View
-          style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
-        >
+        <View>
           <ScrollView
             ref                              = { component => this._smartScroll=component }
             automaticallyAdjustContentInsets = { false }
             scrollsToTop                     = { false }
-            style                            = { styles.flex1 }
+            style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : {}}
             onScroll                         = { (event) => {
               this._updateScrollPosition(event)
               onScroll(event)
