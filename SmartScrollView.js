@@ -241,6 +241,7 @@ class SmartScrollView extends Component {
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
             keyboardShouldPersistTaps        = { true }
             bounces                          = { false }
+            keyboardDismissMode              = {keyboardDismissMode}
           >
             {content}
           </ScrollView>
@@ -266,6 +267,7 @@ SmartScrollView.propTypes = {
   contentInset:                 PropTypes.object,
   onScroll:                     PropTypes.func,
   onRefFocus:                   PropTypes.func,
+  keyboardDismissMode:          PropTypes.string
 };
 
 SmartScrollView.defaultProps = {
@@ -275,7 +277,8 @@ SmartScrollView.defaultProps = {
   showsVerticalScrollIndicator: true,
   contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
   onScroll:                     () => {},
-  onRefFocus:                   () => {}
+  onRefFocus:                   () => {},
+  keyboardDismissMode:          'none'
 };
 
 export default SmartScrollView;
