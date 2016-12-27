@@ -161,7 +161,8 @@ class SmartScrollView extends Component {
       zoomScale,
       showsVerticalScrollIndicator,
       contentInset,
-      onScroll
+      onScroll,
+      keyboardDismissMode
     }                = this.props;
     let inputIndex   = 0;
     const smartClone = (element, i) => {
