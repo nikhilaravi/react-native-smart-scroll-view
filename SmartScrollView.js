@@ -240,7 +240,7 @@ class SmartScrollView extends Component {
             contentInset                     = { contentInset }
             zoomScale                        = { zoomScale }
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
-            keyboardShouldPersistTaps        = { true }
+            keyboardShouldPersistTaps        = 'always'
             bounces                          = { false }
             keyboardDismissMode              = {keyboardDismissMode}
           >
