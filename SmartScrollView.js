@@ -5,7 +5,6 @@ import React, {
 
 import ReactNative, {
   View,
-  StyleSheet,
   ScrollView,
   Keyboard,
   Dimensions,
@@ -252,13 +251,6 @@ class SmartScrollView extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  flex1: {
-    flexGrow: 1,
-    flexBasis:1
-  }
-});
-
 SmartScrollView.propTypes = {
   forceFocusField:              PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   scrollContainerStyle:         View.propTypes.style,
@@ -272,7 +264,7 @@ SmartScrollView.propTypes = {
 };
 
 SmartScrollView.defaultProps = {
-  scrollContainerStyle:         styles.flex1,
+  scrollContainerStyle:         {},
   scrollPadding:                5,
   zoomScale:                    1,
   showsVerticalScrollIndicator: true,
