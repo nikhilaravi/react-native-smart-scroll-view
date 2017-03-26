@@ -122,7 +122,7 @@ class SmartScrollView extends Component {
     const num               = ReactNative.findNodeHandle(this._smartScroll);
     const strippedBackRef   = ref.slice('input_'.length);
 
-    setTimeout(() => {
+    this[ref] && setTimeout(() => {
       onRefFocus(strippedBackRef);
       this.setState({focusedField: strippedBackRef})
       this[ref].measureLayout(num, (X,Y,W,H) => {
