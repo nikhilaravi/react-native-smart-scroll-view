@@ -161,7 +161,8 @@ class SmartScrollView extends Component {
       showsVerticalScrollIndicator,
       contentInset,
       onScroll,
-      keyboardDismissMode
+      keyboardDismissMode,
+      keyboardShouldPersistTaps
     }                = this.props;
     let inputIndex   = 0;
     const smartClone = (element, i) => {
@@ -217,7 +218,6 @@ class SmartScrollView extends Component {
     }
 
     const content = recursivelyCheckAndAdd(scrollChildren, '0');
-
     return (
       <View
         ref   = { component => this._container=component }
@@ -239,7 +239,7 @@ class SmartScrollView extends Component {
             contentInset                     = { contentInset }
             zoomScale                        = { zoomScale }
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
-            keyboardShouldPersistTaps        = 'always'
+            keyboardShouldPersistTaps        = {keyboardShouldPersistTaps}
             bounces                          = { false }
             keyboardDismissMode              = {keyboardDismissMode}
           >
@@ -260,7 +260,8 @@ SmartScrollView.propTypes = {
   contentInset:                 PropTypes.object,
   onScroll:                     PropTypes.func,
   onRefFocus:                   PropTypes.func,
-  keyboardDismissMode:          PropTypes.string
+  keyboardDismissMode:          PropTypes.string,
+  keyboardShouldPersistTaps:          PropTypes.string,
 };
 
 SmartScrollView.defaultProps = {
@@ -271,7 +272,8 @@ SmartScrollView.defaultProps = {
   contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
   onScroll:                     () => {},
   onRefFocus:                   () => {},
-  keyboardDismissMode:          'none'
+  keyboardDismissMode:          'none',
+  keyboardShouldPersistTaps:          'always'
 };
 
 export default SmartScrollView;
@@ -292,3 +294,6 @@ export default SmartScrollView;
 //     lastTap: currentTap
 //   })
 // }
+/**
+ * Created by Meysam on 5/7/17.
+ */
