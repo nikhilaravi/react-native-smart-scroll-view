@@ -1,7 +1,8 @@
 import React, {
   Component,
-  PropTypes,
 } from 'react';
+
+import PropTypes from 'prop-types';
 
 import ReactNative, {
   View,
@@ -237,7 +238,7 @@ class SmartScrollView extends Component {
             contentInset                     = { contentInset }
             zoomScale                        = { zoomScale }
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
-            keyboardShouldPersistTaps        = { true }
+            keyboardShouldPersistTaps        = "always"
             bounces                          = { false }
           >
             {content}
@@ -250,14 +251,14 @@ class SmartScrollView extends Component {
 
 const styles = StyleSheet.create({
   flex1: {
-    flex: 1
+    flexGrow: 1
   }
 });
 
 SmartScrollView.propTypes = {
   forceFocusField:              PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  scrollContainerStyle:         View.propTypes.style,
-  contentContainerStyle:        View.propTypes.style,
+  scrollContainerStyle:         PropTypes.any,
+  contentContainerStyle:        PropTypes.any,
   zoomScale:                    PropTypes.number,
   showsVerticalScrollIndicator: PropTypes.bool,
   contentInset:                 PropTypes.object,
