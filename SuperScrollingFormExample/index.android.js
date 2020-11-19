@@ -5,29 +5,18 @@
 'use strict';
 
 var React = require('react-native');
-var {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-} = React;
+var { AppRegistry, StyleSheet, Text, View } = React;
 
 var SuperScrollingFormExample = React.createClass({
-  render: function() {
+  render: function () {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
-        </Text>
+        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Text style={styles.instructions}>To get started, edit index.android.js</Text>
+        <Text style={styles.instructions}>Shake or press menu button for dev menu</Text>
       </View>
     );
-  }
+  },
 });
 
 var styles = StyleSheet.create({

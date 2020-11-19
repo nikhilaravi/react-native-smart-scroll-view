@@ -12,7 +12,7 @@ Takes in your components and recursively searches for any component (i.e. TextIn
 
 There is also the option to autofocus the next component with `smartScrollOptions` on TextInput submission, and the ability to autofocus **any** component by setting the `smartScrollOptions`props appropriately and specifying the index of the component (more info below) .
 
-Great for use with forms which have multiple TextInput fields!  
+Great for use with forms which have multiple TextInput fields!
 
 ## Getting Started
 
@@ -33,43 +33,42 @@ In wrapping around the ScrollView and using the TextInput to control keyboard we
 
 #### SmartScrollView Props
 
-| Prop  | Default  | Type | Description |
-| :------------ |:---------------:| :---------------:| :-----|
-| forceFocusField | `undefined` |`number` or `string` | Force scroll the view to the TextInput field at the specified index (smart children indexed in order from 0) or 'scrollRef' you have given to your smart child (see smartScrollOptions below) |
-| scrollContainerStyle | `{flex: 1}` | `number` | Style options for the View that wraps the ScrollView, the ScrollView will take up all available space. |
-| scrollPadding | `5` | `number` | Padding between the top of the keyboard/ScrollView and the focused TextInput field |
-| contentContainerStyle | `{flex: 1}` | `number` | Set to the ScrollView contentContainerStyle prop |
-| zoomScale | `1` | `number` | Set to the ScrollView zoomScale prop |
-| showsVerticalScrollIndicator | `true` | `bool` | Set to the ScrollView showsVerticalScrollIndicator prop |
-| contentInset | `{top: 0, left: 0, bottom: 0, right: 0}` | `object` | Set to the ScrollView contentInset prop  |
-| onScroll | `() => {}` | `func` | Set to the ScrollView onScroll function. It will be called alongside our own |
-| onRefFocus | `()=>{}` | `func` | Gives back the 'ref' of the node whenever a smart component is focused |
-| bounces | `()=>{}` | `bool` | Controls bouncing of the underlying ScrollView |
+| Prop                         |                 Default                  |         Type         | Description                                                                                                                                                                                   |
+| :--------------------------- | :--------------------------------------: | :------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| forceFocusField              |               `undefined`                | `number` or `string` | Force scroll the view to the TextInput field at the specified index (smart children indexed in order from 0) or 'scrollRef' you have given to your smart child (see smartScrollOptions below) |
+| scrollContainerStyle         |               `{flex: 1}`                |       `number`       | Style options for the View that wraps the ScrollView, the ScrollView will take up all available space.                                                                                        |
+| scrollPadding                |                   `5`                    |       `number`       | Padding between the top of the keyboard/ScrollView and the focused TextInput field                                                                                                            |
+| contentContainerStyle        |               `{flex: 1}`                |       `number`       | Set to the ScrollView contentContainerStyle prop                                                                                                                                              |
+| zoomScale                    |                   `1`                    |       `number`       | Set to the ScrollView zoomScale prop                                                                                                                                                          |
+| showsVerticalScrollIndicator |                  `true`                  |        `bool`        | Set to the ScrollView showsVerticalScrollIndicator prop                                                                                                                                       |
+| contentInset                 | `{top: 0, left: 0, bottom: 0, right: 0}` |       `object`       | Set to the ScrollView contentInset prop                                                                                                                                                       |
+| onScroll                     |                `() => {}`                |        `func`        | Set to the ScrollView onScroll function. It will be called alongside our own                                                                                                                  |
+| onRefFocus                   |                 `()=>{}`                 |        `func`        | Gives back the 'ref' of the node whenever a smart component is focused                                                                                                                        |
+| bounces                      |                 `()=>{}`                 |        `bool`        | Controls bouncing of the underlying ScrollView                                                                                                                                                |
 
 #### Smart Component Props
 
 Smart components can be the native 'TextInput' s, other component like 'View' s or your own custom components.
 
-For each component that you would like to use, provide the prop `smartScrollOptions` alongside the normal props. **Beware*** some props of native components like TextInputs may be modified by the Smart Scroll View (see below).
+For each component that you would like to use, provide the prop `smartScrollOptions` alongside the normal props. **Beware\*** some props of native components like TextInputs may be modified by the Smart Scroll View (see below).
 
 ##### smartScrollOptions - An object with the following keys:
 
-| Key  | Type | Description |
-| :------------: |:---------------:| :-----:|
-| type | enum (`text`,`custom`) | For type 'text' the 'moveToNext' and 'onSubmitEditing' options can be set (see below). For type 'custom' further scrolling must be done by forcing the index |
-| moveToNext | `bool` | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key|
-| onSubmitEditing(next) | `func` | Optional function that takes a callback.  When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }` |
-| scrollRef | `string` | To be used in conjunction with the 'forceFocusField' prop of the 'SmartScrollView'. Use 'scrollRef' to reference a particular component which can then be set to forceFocusField to have control where the focus is |
-
+|          Key          |          Type          |                                                                                                                                                                      Description                                                                                                                                                                       |
+| :-------------------: | :--------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|         type          | enum (`text`,`custom`) |                                                                                              For type 'text' the 'moveToNext' and 'onSubmitEditing' options can be set (see below). For type 'custom' further scrolling must be done by forcing the index                                                                                              |
+|      moveToNext       |         `bool`         | If `true`, the next TextInput field will be focused when the submit button on the keyboard is pressed. Should be set to false or omitted for the **last input field** on the page. **Warning** this will not work if `keyboardType` for the TextInput is set to 'number-pad', 'decimal-pad', 'phone-pad' or 'numeric' as they do not have a return key |
+| onSubmitEditing(next) |         `func`         |                                                              Optional function that takes a callback. When invoked, the callback will focus the next TextInput field. If no function is specified the next TextInput field is focused. Example: `(next) => { if (condition) { next() } }`                                                              |
+|       scrollRef       |        `string`        |                                                                  To be used in conjunction with the 'forceFocusField' prop of the 'SmartScrollView'. Use 'scrollRef' to reference a particular component which can then be set to forceFocusField to have control where the focus is                                                                   |
 
 ##### How We Modify TextInput Props
 
 For any component which has 'smartScrollOptions.type = text', it is inferred that it is either a 'TextInput' component or contains a 'TextInput' component. The props of the enclosing 'TextInput' component are modified in the following way.
 
-* We attach our own `onFocus` function and will call yours alongside.
-* If `moveToNext` in `smartScrollOptions` is true:
-  * The`onSubmitEditing` is replaced with our own. See above.
-  * `blurOnSubmit` is set to false
+- We attach our own `onFocus` function and will call yours alongside.
+- If `moveToNext` in `smartScrollOptions` is true:
+  - The`onSubmitEditing` is replaced with our own. See above.
+  - `blurOnSubmit` is set to false
 
 ### Example Usage
 

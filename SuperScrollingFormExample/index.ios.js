@@ -5,17 +5,14 @@
 'use strict';
 
 var React = require('react-native');
-var {
-  AppRegistry,
-  Component
-} = React;
+var { AppRegistry, Component } = React;
 
 import Example from './Example.js';
 
 class SuperScrollingFormExample extends Component {
-  render () {
-    return <Example/>
+  render() {
+    return <Example />;
   }
-};
+}
 
 AppRegistry.registerComponent('SuperScrollingFormExample', () => SuperScrollingFormExample);
