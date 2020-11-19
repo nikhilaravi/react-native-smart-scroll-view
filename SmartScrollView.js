@@ -5,7 +5,6 @@ import React, {
 
 import ReactNative, {
   View,
-  StyleSheet,
   ScrollView,
   Keyboard,
   Dimensions,
@@ -123,13 +122,17 @@ class SmartScrollView extends Component {
     const num               = ReactNative.findNodeHandle(this._smartScroll);
     const strippedBackRef   = ref.slice('input_'.length);
 
-    setTimeout(() => {
+    this[ref] && setTimeout(() => {
       onRefFocus(strippedBackRef);
       this.setState({focusedField: strippedBackRef})
       this[ref].measureLayout(num, (X,Y,W,H) => {
         const py = Y - scrollPosition;
 
-        if ( py + H > scrollWindowHeight ){
+        if (!scrollWindowHeight) {
+          setTimeout(() => {
+            this._focusNode(ref);
+          }, 100);
+        } else if ( py + H > scrollWindowHeight ){
           const nextScrollPosition = (Y + H) - scrollWindowHeight + scrollPadding;
 
           this._smartScroll.scrollTo({y: nextScrollPosition});
@@ -157,7 +160,9 @@ class SmartScrollView extends Component {
       zoomScale,
       showsVerticalScrollIndicator,
       contentInset,
-      onScroll
+      onScroll,
+      keyboardDismissMode,
+      keyboardShouldPersistTaps
     }                = this.props;
     let inputIndex   = 0;
     const smartClone = (element, i) => {
@@ -213,21 +218,18 @@ class SmartScrollView extends Component {
     }
 
     const content = recursivelyCheckAndAdd(scrollChildren, '0');
-
     return (
       <View
         ref   = { component => this._container=component }
         style = {scrollContainerStyle}
         onLayout={(e) => this._layout = e.nativeEvent.layout}
       >
-        <View
-          style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : styles.flex1}
-        >
+        <View>
           <ScrollView
             ref                              = { component => this._smartScroll=component }
             automaticallyAdjustContentInsets = { false }
             scrollsToTop                     = { false }
-            style                            = { styles.flex1 }
+            style     = {this.state.keyBoardUp ? { height: this.state.scrollWindowHeight } : {}}
             onScroll                         = { (event) => {
               this._updateScrollPosition(event)
               onScroll(event)
@@ -237,8 +239,9 @@ class SmartScrollView extends Component {
             contentInset                     = { contentInset }
             zoomScale                        = { zoomScale }
             showsVerticalScrollIndicator     = { showsVerticalScrollIndicator }
-            keyboardShouldPersistTaps        = { true }
+            keyboardShouldPersistTaps        = {keyboardShouldPersistTaps}
             bounces                          = { false }
+            keyboardDismissMode              = {keyboardDismissMode}
           >
             {content}
           </ScrollView>
@@ -247,12 +250,6 @@ class SmartScrollView extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  flex1: {
-    flex: 1
-  }
-});
 
 SmartScrollView.propTypes = {
   forceFocusField:              PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -263,16 +260,20 @@ SmartScrollView.propTypes = {
   contentInset:                 PropTypes.object,
   onScroll:                     PropTypes.func,
   onRefFocus:                   PropTypes.func,
+  keyboardDismissMode:          PropTypes.string,
+  keyboardShouldPersistTaps:          PropTypes.string,
 };
 
 SmartScrollView.defaultProps = {
-  scrollContainerStyle:         styles.flex1,
+  scrollContainerStyle:         {},
   scrollPadding:                5,
   zoomScale:                    1,
   showsVerticalScrollIndicator: true,
   contentInset:                 {top: 0, left: 0, bottom: 0, right: 0},
   onScroll:                     () => {},
-  onRefFocus:                   () => {}
+  onRefFocus:                   () => {},
+  keyboardDismissMode:          'none',
+  keyboardShouldPersistTaps:          'always'
 };
 
 export default SmartScrollView;
@@ -293,3 +294,6 @@ export default SmartScrollView;
 //     lastTap: currentTap
 //   })
 // }
+/**
+ * Created by Meysam on 5/7/17.
+ */
