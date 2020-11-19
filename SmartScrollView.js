@@ -162,8 +162,8 @@ class SmartScrollView extends Component {
       contentInset,
       onScroll,
       keyboardDismissMode,
-      keyboardShouldPersistTaps
-      bounces,
+      keyboardShouldPersistTaps,
+      bounces
     }                = this.props;
     let inputIndex   = 0;
     const smartClone = (element, i) => {
