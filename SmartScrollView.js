@@ -275,7 +275,8 @@ SmartScrollView.defaultProps = {
   onScroll:                     () => {},
   onRefFocus:                   () => {},
   keyboardDismissMode:          'none',
-  keyboardShouldPersistTaps:          'always'
+  keyboardShouldPersistTaps:          'always',
+  bounces: false
 };
 
 export default SmartScrollView;
